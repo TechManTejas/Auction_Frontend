@@ -1,33 +1,60 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import Footer from "./components/Footer";
+import UserNavbar from "./components/Navbar";
+import Auction from "./pages/Auction";
+import Home from "./pages/Home";
+import Results from "./pages/Result";
+import Result from "./pages/Result";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom"
+
+// Assume you have an authentication check function, you can replace it with your actual authentication logic.
+const isAuthenticated = () => {
+  // Replace this with your authentication logic
+  return true; // For demonstration purposes, always consider the user as authenticated
+};
+
+const UserRoutes: React.FC = () => {
+  return (
+    <>
+      <UserNavbar />
+      <Routes>
+        {isAuthenticated() && (
+          <>
+            <Route path="/auction" element={<Auction />} />
+            <Route path="/result" element={<Result />} />
+          </>
+        )}
+        <Route path="/" element={<Navigate to={"home"} />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/results" element={<Results />} />
+      </Routes>
+      <Footer />
+    </>
+  )
+}
+
+const AdminRoutes: React.FC = () => {
+  return (
+    <>
+
+    </>
+  )
+}
+
+
+
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Router>
+        <Routes>
+          {/* User Route  */}
+          <Route path="/*" element={<UserRoutes />} />
+          {/* Admin Route  */}
+          <Route path="/admin/*" element={<AdminRoutes />} />
+        </Routes>
+      </Router>
     </>
   )
 }
