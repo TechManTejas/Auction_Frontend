@@ -1,5 +1,6 @@
 import { Tabs, Input, Button, Checkbox } from 'antd';
 import { UserOutlined, UserAddOutlined, LockOutlined, EyeOutlined, MailOutlined } from '@ant-design/icons';
+import { useState } from 'react';
 
 const { TabPane } = Tabs;
 
@@ -41,28 +42,28 @@ const Register: React.FC = () => {
     return (
         <div className='space-y-6 w-[300px]'>
             <div className='flex space-x-6'>
-            <div>
-                <Input
-                    className='text-center rounded-none'
-                    placeholder="First Name"
-                    prefix={<UserOutlined className="site-form-item-icon" style={{ color: '#1890FF' }} />}
-                />
+                <div>
+                    <Input
+                        className='text-center rounded-none'
+                        placeholder="First Name"
+                        prefix={<UserOutlined className="site-form-item-icon" style={{ color: '#1890FF' }} />}
+                    />
+                </div>
+                <div>
+                    <Input
+                        className='text-center rounded-none'
+                        placeholder="Last Name"
+                        prefix={<UserOutlined className="site-form-item-icon" style={{ color: '#1890FF' }} />}
+                    />
+                </div>
             </div>
             <div>
                 <Input
                     className='text-center rounded-none'
-                    placeholder="Last Name"
-                    prefix={<UserOutlined className="site-form-item-icon" style={{ color: '#1890FF' }} />}
+                    placeholder="Email"
+                    prefix={<MailOutlined className="site-form-item-icon" style={{ color: '#1890FF' }} />}
                 />
             </div>
-        </div>
-        <div>
-            <Input
-                className='text-center rounded-none'
-                placeholder="Email"
-                prefix={<MailOutlined className="site-form-item-icon" style={{ color: '#1890FF' }} />}
-            />
-        </div>
             <div>
                 <Input
                     className='text-center rounded-none'
@@ -96,6 +97,16 @@ const Register: React.FC = () => {
 }
 
 export default function Autentication() {
+
+    const [activeTab, setActiveTab] = useState<string>('1');
+
+    const handleTabChange = (key: string) => {
+        // Do something based on the selected tab key
+        console.log(`Tab changed to: ${key}`);
+        setActiveTab(key);
+        console.log(activeTab);
+    };
+
     return (
         <div className='w-full flex flex-col justify-center items-center'>
             <div className='font-semibold text-3xl mt-5'>
@@ -105,7 +116,7 @@ export default function Autentication() {
                 <Tabs
                     defaultActiveKey="1"
                     tabPosition="top"
-                    onChange={() => { }}
+                    onChange={handleTabChange}
                 >
                     <TabPane
                         tab={
@@ -126,7 +137,10 @@ export default function Autentication() {
                 </Tabs>
             </div>
             <div className='mb-10'>
-                <Register />
+                {activeTab === '1' ?
+                    <Login /> :
+                    <Register />
+                }
             </div>
         </div>
     )
