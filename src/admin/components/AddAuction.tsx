@@ -39,9 +39,9 @@ export default function AddAuction() {
             onFinish={formik.handleSubmit}
         >
             <Form.Item label="Images" name="images">
-                <Upload 
+                <Upload
                 // {...imageUploadProps}
-            >
+                >
                     <Button icon={<UploadOutlined />}>Upload</Button>
                 </Upload>
             </Form.Item>
@@ -55,7 +55,10 @@ export default function AddAuction() {
             </Form.Item>
 
             <Form.Item label="Start Date and Time" name="start_datetime" rules={[{ required: true, message: 'Please select the start date and time!' }]}>
-                <DatePicker showTime onChange={(date, dateString) => formik.setFieldValue('start_datetime', dateString)} />
+                <DatePicker showTime onChange={(date, dateString) => { 
+                    console.log(date)
+                    formik.setFieldValue('start_datetime', dateString) 
+                }} />
             </Form.Item>
 
             <Form.Item label="Duration" name="duration">

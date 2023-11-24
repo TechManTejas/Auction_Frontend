@@ -1,5 +1,5 @@
 import { Result, Button } from "antd"
-import AuctionCard from '../components/AuctionCard'
+// import AuctionCard from '../components/AuctionCard'
 
 export default function Results() {
 
@@ -34,9 +34,9 @@ export default function Results() {
                         Oops.. lost the bid? No worries we have some more for you
                     </div>
                     <div className='flex w-full justify-center space-x-32 my-10'>
+                        {/* <AuctionCard live />
                         <AuctionCard live />
-                        <AuctionCard live />
-                        <AuctionCard live />
+                        <AuctionCard live /> */}
                     </div>
                 </div>
             }
