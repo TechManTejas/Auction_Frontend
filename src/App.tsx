@@ -61,9 +61,9 @@ function App() {
       <Router>
         <Routes>
           {/* Admin Route  */}
-          <Route path="/admin/*" element={<AdminRoutes />} />
+          <Route path="/*" element={<AdminRoutes />} />
           {/* User Route  */}
-          <Route path="/*" element={<UserRoutes />} />
+          <Route path="/admin/*" element={<UserRoutes />} />
         </Routes>
       </Router>
     </>
