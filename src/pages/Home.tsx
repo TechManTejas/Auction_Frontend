@@ -1,6 +1,6 @@
 import { Carousel, Tabs, Pagination, Modal } from 'antd';
 import { PlayCircleOutlined, ClockCircleOutlined } from '@ant-design/icons';
-import AuctionCard from '../components/AuctionCard';
+// import AuctionCard from '../components/AuctionCard';
 import { useState } from 'react';
 import Autentication from '../components/Autentication';
 const { TabPane } = Tabs;
@@ -68,9 +68,9 @@ export default function Home() {
             </Tabs >
           </div>
           <div className='flex space-x-32 my-4'>
-            <AuctionCard live />
+            {/* <AuctionCard live />
             <AuctionCard />
-            <AuctionCard />
+            <AuctionCard /> */}
           </div>
           <div className='m-4'>
             <Pagination defaultCurrent={1} total={50} />

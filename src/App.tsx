@@ -1,8 +1,12 @@
+import AdminNavbar from "./admin/components/Navbar";
+import Sidebar from "./admin/components/Sidebar";
+import Auctions from "./admin/pages/Auctions";
+import Payments from "./admin/pages/Payments";
+import Users from "./admin/pages/Users";
 import Footer from "./components/Footer";
 import UserNavbar from "./components/Navbar";
 import Auction from "./pages/Auction";
 import Home from "./pages/Home";
-import Results from "./pages/Result";
 import Result from "./pages/Result";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom"
 
@@ -25,7 +29,6 @@ const UserRoutes: React.FC = () => {
         )}
         <Route path="/" element={<Navigate to={"home"} />} />
         <Route path="/home" element={<Home />} />
-        <Route path="/results" element={<Results />} />
       </Routes>
       <Footer />
     </>
@@ -35,7 +38,16 @@ const UserRoutes: React.FC = () => {
 const AdminRoutes: React.FC = () => {
   return (
     <>
-
+      <AdminNavbar />
+      <div className='flex'>
+        <Sidebar />
+        <Routes>
+          <Route path="/" element={<Navigate to={"auctions"} />} />
+          <Route path="/auctions" element={<Auctions />} />
+          <Route path="/payments" element={<Payments />} />
+          <Route path="/users" element={<Users />} />
+        </Routes>
+      </div>
     </>
   )
 }
@@ -44,15 +56,14 @@ const AdminRoutes: React.FC = () => {
 
 
 function App() {
-
   return (
     <>
       <Router>
         <Routes>
-          {/* User Route  */}
-          <Route path="/*" element={<UserRoutes />} />
           {/* Admin Route  */}
           <Route path="/admin/*" element={<AdminRoutes />} />
+          {/* User Route  */}
+          <Route path="/*" element={<UserRoutes />} />
         </Routes>
       </Router>
     </>
