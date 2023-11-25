@@ -1,8 +1,11 @@
 import { Button } from "antd"
+import { useNavigate } from 'react-router-dom';
 
 export default function UserNavbar() {
 
     const token = false;
+
+    const navigate = useNavigate();
 
     return (
         <div className='flex justify-between items-center w-full text-xl p-3'>
@@ -25,6 +28,11 @@ export default function UserNavbar() {
                         </div>
                     </div>
                 }
+                <div>
+                    <Button size={"middle"} type="dashed" className="bg-red-600 text-white rounded-none border-[1.5px]" onClick={()=>{
+                        navigate(`/admin`);
+                    }}>Admin</Button>
+                </div>
             </div>
         </div>
     )

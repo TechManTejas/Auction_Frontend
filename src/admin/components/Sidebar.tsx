@@ -13,7 +13,7 @@ const Sidebar: React.FC = () => {
 
     const handleMenuClick = (key: string) => {
         // Convert the key to lowercase and navigate to the respective route
-        navigate(`/${key.toLowerCase()}`);
+        navigate(`/admin/${key.toLowerCase()}`);
     };
 
     return (

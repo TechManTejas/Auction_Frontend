@@ -68,7 +68,7 @@ export default function Auctions() {
 
     return (
         <>
-            <Modal className='' closable={false} open={isModalOpen} footer={null} onCancel={() => { setIsModalOpen(false) }}>
+            <Modal width={1000} closable={false} open={isModalOpen} footer={null} onCancel={() => { setIsModalOpen(false) }}>
                 <AddAuction />
             </Modal>
             <Tabs
@@ -126,7 +126,7 @@ export default function Auctions() {
                             ))}
                     </div>
                 </TabPane>
-                <TabPane tab={<span><ClockCircleOutlined />All</span>} key="4" >
+                {/* <TabPane tab={<span><ClockCircleOutlined />All</span>} key="4" >
                     <div className='my-4 grid grid-cols-3'>
                         {auctionData.map((auction) => (
                             <AuctionCard
@@ -139,7 +139,7 @@ export default function Auctions() {
                             />
                         ))}
                     </div>
-                </TabPane>
+                </TabPane> */}
             </Tabs>
         </>
     )
