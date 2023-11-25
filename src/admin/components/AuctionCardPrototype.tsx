@@ -38,7 +38,7 @@ const AuctionCard: React.FC<AuctionCardProps> = ({ live = false, startAt, title,
                     })}
                 </div>
                 <div>
-                    <img src={image} className="object-cover w-full h-44" alt="Auction Item" />
+                    <img src={image || Placeholder} className="object-cover w-full h-44" alt="Auction Item" />
                 </div>
                 <div className="p-6 space-y-3.5">
                     <div className="font-semibold overflow-hidden overflow-ellipsis whitespace-normal line-clamp-1">{title}</div>
