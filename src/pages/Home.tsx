@@ -1,8 +1,11 @@
 import { Carousel, Tabs, Pagination, Modal } from 'antd';
 import { PlayCircleOutlined, ClockCircleOutlined } from '@ant-design/icons';
 // import AuctionCard from '../components/AuctionCard';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Autentication from '../components/Autentication';
+import { IAuction } from '../types/auction.types';
+import axios from "../api/axios"
+import AuctionCard from '../components/AuctionCard';
 const { TabPane } = Tabs;
 
 
@@ -17,11 +20,26 @@ export default function Home() {
   };
 
   const [isModalOpen, setIsModalOpen] = useState(true);
+  const [auctions, setAuctions] = useState<IAuction[]>([]);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('/auctions'); // Replace with your API endpoint
+      console.log(response.data)
+      setAuctions(response.data.auctions);
+    } catch (error) {
+      console.error('Error fetching auction data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div>
-      <Modal closable={false} open={isModalOpen} footer={null} onCancel={()=>{setIsModalOpen(false)}}>
-        <Autentication/>
+      <Modal closable={false} open={isModalOpen} footer={null} onCancel={() => { setIsModalOpen(false) }}>
+        <Autentication />
       </Modal>
       <div className='bg-[#EDF5FF] px-10'>
         <div className='space-y-2 py-5'>
@@ -68,9 +86,20 @@ export default function Home() {
             </Tabs >
           </div>
           <div className='flex space-x-32 my-4'>
-            {/* <AuctionCard live />
-            <AuctionCard />
-            <AuctionCard /> */}
+            {auctions
+              .filter((auction) => auction.status === 'In Progress')
+              .map((auction) => (
+                <AuctionCard
+                  key={auction._id}
+                  id={auction._id}
+                  image={auction.image}
+                  live={auction.status === 'In Progress'}
+                  startAt={auction.start_datetime.toString()}
+                  title={auction.title}
+                  description={auction.description}
+                  openingBidAmount={`$${auction.opening_bid_amount}`}
+                />
+              ))}
           </div>
           <div className='m-4'>
             <Pagination defaultCurrent={1} total={50} />

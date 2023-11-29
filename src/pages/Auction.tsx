@@ -2,6 +2,7 @@ import { Button } from "antd"
 import Placeholder from "../assets/images/placeholder.png"
 
 export default function Auction() {
+  
   return (
     <div className="bg-[#EDF5FF] p-10 space-y-10">
       <div className="flex justify-center">
@@ -13,7 +14,7 @@ export default function Auction() {
             Title
           </div>
           <div className="">
-            Description Descriptio nDescriptionDescriptionDes criptionDescri ptionDescript ionDescriptionDescripti onDescriptionDescriptionDescripti onDescriptio nDescriptionDescriptionDescripti onDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescripti onDescriptionDescriptionDescriptionDescript ionDescriptionDescriptionDescription
+            Description 
           </div>
         </div>
       </div>

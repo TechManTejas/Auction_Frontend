@@ -1,8 +1,11 @@
 import React from "react";
 import { Button } from "antd";
-import Bike from "../assets/images/bike.gif";
+import { useNavigate } from "react-router-dom";
+import Placeholder from "../assets/images/placeholder.png";
 
 interface AuctionCardProps {
+    id: string;
+    image: string;
     live?: boolean;
     startAt: string;
     title: string;
@@ -10,7 +13,15 @@ interface AuctionCardProps {
     openingBidAmount: string;
 }
 
-const AuctionCard: React.FC<AuctionCardProps> = ({ live = false, startAt, title, description, openingBidAmount }) => {
+const AuctionCard: React.FC<AuctionCardProps> = ({ id, live = false, image, startAt, title, description, openingBidAmount }) => {
+    
+    const navigate = useNavigate()
+
+    const handleEnterAuction = () => {
+        localStorage.setItem('auction-room-id', id);
+        navigate('/auction');
+    };
+
     return (
         <div>
             <div className={`absolute w-[300px] h-[460px] ${live ? 'border-[#52C41A] border-[3px] animate-pulse' : ''}   rounded-xl`} />
@@ -27,7 +38,7 @@ const AuctionCard: React.FC<AuctionCardProps> = ({ live = false, startAt, title,
                 )}
                 <div className="w-full flex justify-center items-center p-2 text-[#002766] daybreakblue-10">
                     {new Date(startAt).toLocaleString('en-US', {
-                        weekday: 'long',
+                        weekday: 'short',
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric',
@@ -37,14 +48,14 @@ const AuctionCard: React.FC<AuctionCardProps> = ({ live = false, startAt, title,
                     })}
                 </div>
                 <div>
-                    <img src={Bike} className="object-cover" alt="Auction Item" />
+                    <img src={image || Placeholder} className="object-cover w-full h-44" alt="Auction Item" />
                 </div>
                 <div className="p-6 space-y-3.5">
                     <div className="font-semibold overflow-hidden overflow-ellipsis line-clamp-1">{title}</div>
                     <div className="text-sm h-20 overflow-hidden overflow-ellipsis whitespace-normal line-clamp-4">{description}</div>
                     <div className="text-[#096DD9] primary-7">Opening Bid: {openingBidAmount}</div>
                     <div className="w-full flex justify-center items-center">
-                        <Button className="bg-[#1890FF] primary-6 text-white px-5 rounded-sm">{live ? "Enter" : "Register"}</Button>
+                        <Button className="bg-[#1890FF] primary-6 text-white px-5 rounded-sm" onClick={handleEnterAuction}>{live ? "Enter" : "Register"}</Button>
                     </div>
                 </div>
             </div>
