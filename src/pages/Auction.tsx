@@ -18,7 +18,7 @@ export default function Auction() {
       </div>
 
       <div>
-        <div className="">
+        <div className="space-y-4">
           <div className="text-4xl font-medium text-center text-[#002766]">
             Current Bid Amount : $1000
           </div>
