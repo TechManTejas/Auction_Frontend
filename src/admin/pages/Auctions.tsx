@@ -1,9 +1,10 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { Button, Tabs, Modal } from 'antd';
+import { Button, Tabs, Modal, message } from 'antd';
 import { InboxOutlined, ClockCircleOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import AddAuction from '../components/AddAuction';
 import axios from '../../api/axios';
 import AuctionCard from '../components/AuctionCard';
+import { confirmation } from '../components/Confirmation';
 const { TabPane } = Tabs;
 
 interface IAuction {
@@ -12,7 +13,7 @@ interface IAuction {
     winner_bid_amount: number;
     title: string;
     description: string;
-    images: string[];
+    image: string;
     start_datetime: Date;
     duration: number;
     opening_bid_amount: number;
@@ -23,8 +24,9 @@ interface IAuction {
 
 export default function Auctions() {
 
+    const [auctions, setAuctions] = useState<IAuction[]>([]);
+    const [editedAuctionDetails, setEditedAuctionDetails] = useState<IAuction | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [auctionData, setAuctionData] = useState<IAuction[]>([]);
     const [activeTab, setActiveTab] = useState<string>('1');
 
     type PositionType = 'left';
@@ -51,25 +53,81 @@ export default function Auctions() {
         console.log(activeTab);
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get('/auctions'); // Replace with your API endpoint
-                console.log(response.data)
-                setAuctionData(response.data);
-            } catch (error) {
-                console.error('Error fetching auction data:', error);
-            }
-        };
+    const fetchData = async () => {
+        try {
+            const response = await axios.get('/auctions'); // Replace with your API endpoint
+            console.log(response.data)
+            setAuctions(response.data.auctions);
+        } catch (error) {
+            console.error('Error fetching auction data:', error);
+        }
+    };
 
+    useEffect(() => {
         fetchData();
     }, []);
+
+    const handleModifiedAuctionList = (editedAuction: IAuction) => {
+        setAuctions((prevAuctions) => {
+            // Check if the edited coupon already exists in the list
+            const couponExists = prevAuctions.some((auction) => auction._id === editedAuction?._id);
+
+            if (couponExists) {
+                // Update the existing coupon
+                const updatedCoupons = prevAuctions.map((auction) =>
+                    auction._id === editedAuction._id ? editedAuction : auction
+                );
+                return updatedCoupons;
+            } else {
+                // Add the new coupon to the list
+                return [...prevAuctions, editedAuction];
+            }
+        });
+    };
+
+    const handleEditCoupon = (auctionId: string) => {
+        // Find the coupon with the given ID
+        const editedCoupon = auctions.find((auction) => auction._id === auctionId);
+
+        // Check if the coupon is found
+        if (editedCoupon) {
+            // Open the AddEditCoupon modal and pass the coupon ID and details
+            setIsModalOpen(true);
+            setEditedAuctionDetails(editedCoupon);
+        }
+    };
+
+    const handleDeleteCoupon = async (auctionId: string) => {
+        try {
+            // Make axios call to delete the coupon
+            await axios.delete(`/auctions/${auctionId}`);
+            // Update the list after successful deletion
+            setAuctions((prevAuctions) => prevAuctions.filter((auction) => auction._id !== auctionId));
+            // Fetch data for the current page to reflect the deletion
+            // fetchData(currentPage); 
+
+            // Show a success message to the user
+            message.success('Auction deleted successfully!');
+        } catch (error) {
+            console.error('Error deleting coupon:', error);
+            // Handle error (e.g., show an error message to the user)
+            message.error('Error deleting coupon. Please try again.');
+        }
+    };
+
+    const handleDeleteConfirmation = async (auctionId: string) => {
+        const shouldDelete = await confirmation("Are you sure you want to delete this Auction?");
+        if (shouldDelete) {
+            // User confirmed the deletion, call the delete function
+            handleDeleteCoupon(auctionId);
+        }
+    };
 
 
     return (
         <>
             <Modal width={1000} closable={false} open={isModalOpen} footer={null} onCancel={() => { setIsModalOpen(false) }}>
-                <AddAuction />
+                <AddAuction onAuctionEdited={handleModifiedAuctionList} editedAuction={editedAuctionDetails}/>
             </Modal>
             <Tabs
                 className='flex flex-1'
@@ -79,49 +137,60 @@ export default function Auctions() {
                 onChange={handleTabChange}
             >
                 <TabPane tab={<span><InboxOutlined />Live</span>} key="1" >
-                    <div className='my-4 grid grid-cols-3'>
-                        {auctionData
+                    <div className='p-6 gap-12 flex flex-wrap'>
+                        {auctions
                             .filter((auction) => auction.status === 'In Progress')
                             .map((auction) => (
                                 <AuctionCard
                                     key={auction._id}
+                                    id={auction._id}
+                                    image={auction.image}
                                     live={auction.status === 'In Progress'}
                                     startAt={auction.start_datetime.toString()}
                                     title={auction.title}
                                     description={auction.description}
                                     openingBidAmount={`$${auction.opening_bid_amount}`}
+                                    modifyable={false}
                                 />
                             ))}
                     </div>
                 </TabPane>
                 <TabPane tab={<span><ClockCircleOutlined />Upcoming</span>} key="2" >
-                    <div className='my-4 grid grid-cols-3'>
-                        {auctionData
+                    <div className='p-6 gap-12 flex flex-wrap'>
+                        {auctions
                             .filter((auction) => auction.status === 'Not Started')
                             .map((auction) => (
                                 <AuctionCard
                                     key={auction._id}
+                                    id={auction._id}
+                                    image={auction.image}
                                     live={auction.status === 'In Progress'}
                                     startAt={auction.start_datetime.toString()}
                                     title={auction.title}
                                     description={auction.description}
                                     openingBidAmount={`$${auction.opening_bid_amount}`}
+                                    modifyable={true}
+                                    handleDeleteConfirmation={handleDeleteConfirmation}
+                                    handleEditCoupon={handleEditCoupon}
                                 />
                             ))}
                     </div>
                 </TabPane>
                 <TabPane tab={<span><CheckCircleOutlined />Completed</span>} key="3" >
-                    <div className='my-4 grid grid-cols-3'>
-                        {auctionData
+                    <div className='p-6 gap-12 flex flex-wrap'>
+                        {auctions
                             .filter((auction) => auction.status === 'Ended')
                             .map((auction) => (
                                 <AuctionCard
                                     key={auction._id}
+                                    id={auction._id}
+                                    image={auction.image}
                                     live={auction.status === 'In Progress'}
                                     startAt={auction.start_datetime.toString()}
                                     title={auction.title}
                                     description={auction.description}
                                     openingBidAmount={`$${auction.opening_bid_amount}`}
+                                    modifyable={false}
                                 />
                             ))}
                     </div>

@@ -1,16 +1,21 @@
 import React from "react";
 import { Button } from "antd";
-import Bike from "../../assets/images/bike.gif";
+import Placeholder from "../../assets/images/placeholder.png";
 
 interface AuctionCardProps {
+    id: string;
+    image: string;
     live?: boolean;
     startAt: string;
     title: string;
     description: string;
     openingBidAmount: string;
+    modifyable: boolean;
+    handleDeleteConfirmation?: (id: string) => void;
+    handleEditCoupon?: (id: string) => void;
 }
 
-const AuctionCard: React.FC<AuctionCardProps> = ({ live = false, startAt, title, description, openingBidAmount }) => {
+const AuctionCard: React.FC<AuctionCardProps> = ({ id, live = false, image, startAt, title, description, openingBidAmount, modifyable, handleDeleteConfirmation, handleEditCoupon }) => {
     return (
         <div>
             <div className={`absolute w-[300px] h-[460px] ${live ? 'border-[#52C41A] border-[3px] animate-pulse' : ''}   rounded-xl`} />
@@ -37,16 +42,27 @@ const AuctionCard: React.FC<AuctionCardProps> = ({ live = false, startAt, title,
                     })}
                 </div>
                 <div>
-                    <img src={Bike} className="object-cover" alt="Auction Item" />
+                    <img src={image || Placeholder} className="object-cover w-full h-44" alt="Auction Item" />
                 </div>
                 <div className="p-6 space-y-3.5">
                     <div className="font-semibold overflow-hidden overflow-ellipsis line-clamp-1">{title}</div>
                     <div className="text-sm h-20 overflow-hidden overflow-ellipsis whitespace-normal line-clamp-4">{description}</div>
                     <div className="text-[#096DD9] primary-7">Opening Bid: {openingBidAmount}</div>
-                    <div className="w-full flex justify-between items-center">
-                        <Button className="bg-[#1890FF] primary-6 text-white px-5 rounded-sm">Edit</Button>
-                        <Button className="bg-[#ff1818] primary-6 text-white px-5 rounded-sm">Delete</Button>
-                    </div>
+                    {
+                        modifyable &&
+                        <div className="w-full flex justify-between items-center">
+                            <Button className="bg-[#1890FF] primary-6 text-white px-5 rounded-sm" onClick={() => {
+                                if (handleEditCoupon) {
+                                    handleEditCoupon(id)
+                                }
+                            }}>Edit</Button>
+                            <Button className="bg-[#ff1818] primary-6 text-white px-5 rounded-sm" onClick={() => {
+                                if (handleDeleteConfirmation) {
+                                    handleDeleteConfirmation(id)
+                                }
+                            }}>Delete</Button>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
