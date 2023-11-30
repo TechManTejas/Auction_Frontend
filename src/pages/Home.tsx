@@ -1,8 +1,7 @@
-import { Carousel, Tabs, Pagination, Modal } from 'antd';
+import { Carousel, Tabs, Pagination } from 'antd';
 import { PlayCircleOutlined, ClockCircleOutlined } from '@ant-design/icons';
 // import AuctionCard from '../components/AuctionCard';
 import { useEffect, useState } from 'react';
-import Autentication from '../components/Autentication';
 import { IAuction } from '../types/auction.types';
 import axios from "../api/axios"
 import AuctionCard from '../components/AuctionCard';
@@ -19,7 +18,6 @@ export default function Home() {
     background: '#40A9FF', //primary-5
   };
 
-  const [isModalOpen, setIsModalOpen] = useState(true);
   const [auctions, setAuctions] = useState<IAuction[]>([]);
 
   const fetchData = async () => {
@@ -38,9 +36,6 @@ export default function Home() {
 
   return (
     <div>
-      <Modal closable={false} open={isModalOpen} footer={null} onCancel={() => { setIsModalOpen(false) }}>
-        <Autentication />
-      </Modal>
       <div className='bg-[#EDF5FF] px-10'>
         <div className='space-y-2 py-5'>
           <div className='text-4xl font-medium text-center text-[#002766]'>

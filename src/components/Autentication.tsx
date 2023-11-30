@@ -1,10 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Tabs, Input, Button, Checkbox, message } from 'antd';
+import { Tabs, Input, Button, message } from 'antd';
 import { UserOutlined, UserAddOutlined, LockOutlined, EyeOutlined, MailOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import axios from "../api/axios"
 
 const { TabPane } = Tabs;
+
+interface AuthenticationProps {
+    defaultTab?: string | null;
+  }
 
 const Login: React.FC = () => {
     const [username, setUsername] = useState('');
@@ -47,12 +51,12 @@ const Login: React.FC = () => {
                     onChange={(e) => setPassword(e.target.value)}
                 />
             </div>
-            <div className='flex justify-between items-center'>
+            {/* <div className='flex justify-between items-center'>
                 <div>
                     <Checkbox>Remember me</Checkbox>
                 </div>
                 <div className='text-sky-600'>Forgot password?</div>
-            </div>
+            </div> */}
             <div>
                 <Button className="bg-[#1890FF] primary-6 text-white px-6 rounded-sm" onClick={handleLogin}>
                     Sign in
@@ -159,7 +163,7 @@ const Register: React.FC = () => {
     )
 }
 
-export default function Autentication() {
+const Autentication: React.FC<AuthenticationProps> = () => {
 
     const [activeTab, setActiveTab] = useState<string>('1');
 
@@ -208,3 +212,5 @@ export default function Autentication() {
         </div>
     )
 }
+
+export default Autentication;

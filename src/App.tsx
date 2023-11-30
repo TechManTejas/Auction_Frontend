@@ -1,3 +1,4 @@
+import { useState } from "react";
 import AdminNavbar from "./admin/components/Navbar";
 import Sidebar from "./admin/components/Sidebar";
 import Auctions from "./admin/pages/Auctions";
@@ -10,18 +11,19 @@ import Home from "./pages/Home";
 import Result from "./pages/Result";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom"
 
-// Assume you have an authentication check function, you can replace it with your actual authentication logic.
-const isAuthenticated = () => {
-  // Replace this with your authentication logic
-  return true; // For demonstration purposes, always consider the user as authenticated
-};
 
 const UserRoutes: React.FC = () => {
+
+  const [userAuthenticated, setUserAuthenticated] = useState<boolean>(!!localStorage.getItem('auction-user-token'))
+
   return (
     <>
-      <UserNavbar />
+      <UserNavbar
+        userAuthenticated={userAuthenticated}
+        setUserAuthenticated={setUserAuthenticated}
+      />
       <Routes>
-        {isAuthenticated() && (
+        {userAuthenticated && (
           <>
             <Route path="/auction" element={<Auction />} />
             <Route path="/result" element={<Result />} />
@@ -36,6 +38,7 @@ const UserRoutes: React.FC = () => {
 }
 
 const AdminRoutes: React.FC = () => {
+
   return (
     <>
       <AdminNavbar />
@@ -52,10 +55,8 @@ const AdminRoutes: React.FC = () => {
   )
 }
 
-
-
-
 function App() {
+
   return (
     <>
       <Router>
