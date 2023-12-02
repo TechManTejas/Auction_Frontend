@@ -1,12 +1,18 @@
-import { Carousel, Tabs, Pagination } from 'antd';
+import { Carousel, Tabs, Pagination, Spin } from 'antd';
 import { PlayCircleOutlined, ClockCircleOutlined } from '@ant-design/icons';
-// import AuctionCard from '../components/AuctionCard';
 import { useEffect, useState } from 'react';
 import { IAuction } from '../types/auction.types';
 import axios from "../api/axios"
 import AuctionCard from '../components/AuctionCard';
 const { TabPane } = Tabs;
 
+const NoAuction: React.FC = () => {
+  return (
+      <div className='text-4xl font-bold text-center text-[#002766]'>
+          "Currently, no auctions are available. Kindly revisit later for updates."
+      </div>
+  )
+}
 
 export default function Home() {
 
@@ -18,21 +24,36 @@ export default function Home() {
     background: '#40A9FF', //primary-5
   };
 
+  const [loading, setLoading] = useState<boolean>(true)
   const [auctions, setAuctions] = useState<IAuction[]>([]);
+  const [totalAuctions, setTotalAuctions] = useState<number>(0);
+  const [page, setPage] = useState<number>(1);
+  const [pageSize] = useState<number>(3);
+  const [selectedTab, setSelectedTab] = useState<string>('In Progress');
 
-  const fetchData = async () => {
+  const fetchData = async (page = 1, filter = {}) => {
+    setLoading(true)
     try {
-      const response = await axios.get('/auctions'); // Replace with your API endpoint
+      const response = await axios.get('/auctions', {
+        params: {
+          page: page,
+          pageSize: pageSize,
+          filter: JSON.stringify(filter),
+        },
+      });
       console.log(response.data)
       setAuctions(response.data.auctions);
+      setTotalAuctions(response.data.total);
+      setLoading(false)
     } catch (error) {
       console.error('Error fetching auction data:', error);
+      setLoading(false)
     }
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    fetchData(page, { status: selectedTab });
+  }, [selectedTab]);
 
   return (
     <div>
@@ -72,18 +93,25 @@ export default function Home() {
         <div className='flex flex-col justify-center items-center w-full'>
           <div className='m-4'>
             <Tabs
-              defaultActiveKey="1"
+              defaultActiveKey="In Progress"
               tabPosition="top"
-              onChange={() => { }}
+              onChange={(key) => {
+                setSelectedTab(key)
+              }}
             >
-              <TabPane tab={<span><PlayCircleOutlined /> Active</span>} key="1" />
-              <TabPane tab={<span><ClockCircleOutlined /> Upcoming</span>} key="2" />
+              <TabPane tab={<span><PlayCircleOutlined /> Active</span>} key="In Progress" />
+              <TabPane tab={<span><ClockCircleOutlined /> Upcoming</span>} key="Not Started" />
             </Tabs >
           </div>
-          <div className='flex space-x-32 my-4'>
-            {auctions
-              .filter((auction) => auction.status === 'In Progress')
-              .map((auction) => (
+          <div className='h-[460px] flex justify-center items-center space-x-12 my-4'>
+            {loading ? (
+              // Show loading spin when auctions are being fetched
+              <div className="flex items-center justify-center w-full">
+                <Spin size="large" tip="Loading..." />
+              </div>
+            ) : auctions.length > 0 ? (
+              // Show auctions if available
+              auctions.map((auction) => (
                 <AuctionCard
                   key={auction._id}
                   id={auction._id}
@@ -94,10 +122,20 @@ export default function Home() {
                   description={auction.description}
                   openingBidAmount={`$${auction.opening_bid_amount}`}
                 />
-              ))}
+              ))
+            ) : <NoAuction/>}
           </div>
+
           <div className='m-4'>
-            <Pagination defaultCurrent={1} total={50} />
+            <Pagination
+              current={page}
+              pageSize={pageSize}
+              total={totalAuctions}
+              onChange={(page) => {
+                setPage(page);
+                fetchData(page, { status: selectedTab });
+              }}
+            />
           </div>
         </div>
       </div>

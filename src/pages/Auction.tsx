@@ -20,7 +20,7 @@ interface LiveAuctionDetails {
 
 export default function Auction() {
 
-  const socket = io("https://65.1.108.98:8000");
+  const socket = io(import.meta.env.VITE_BASE_URL);
 
   const navigate = useNavigate()
   const [auction, setAuction] = useState<IAuction | null>(null)

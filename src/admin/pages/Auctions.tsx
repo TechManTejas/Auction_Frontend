@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { Button, Tabs, Modal, message } from 'antd';
+import { Button, Tabs, Modal, message, Spin } from 'antd';
 import { InboxOutlined, ClockCircleOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import AddAuction from '../components/AddAuction';
 import axios from '../../api/axios';
@@ -28,14 +28,23 @@ export default function Auctions() {
     const [editedAuctionDetails, setEditedAuctionDetails] = useState<IAuction | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [activeTab, setActiveTab] = useState<string>('1');
+    const [loading, setLoading] = useState(true);
 
     type PositionType = 'left';
 
     const [position] = useState<PositionType[]>(['left']);
 
     const OperationsSlot: Record<PositionType, React.ReactNode> = {
-        left: <Button className="h-12 w-40 mb-4 bg-[#1890FF] primary-6 text-white" onClick={() => { setIsModalOpen(true) }}>Add Auction</Button>,
+        left: <Button type='primary' size='large' className="mb-4 bg-[#1890FF] primary-6" onClick={() => { setIsModalOpen(true) }}>Add Auction</Button>,
     };
+
+    const NoAuction: React.FC = () => {
+        return (
+            <div className='text-4xl font-bold text-center text-[#002766]'>
+                No auctions here...
+            </div>
+        )
+    }
 
     const slot = useMemo(() => {
         if (position.length === 0) return null;
@@ -58,8 +67,10 @@ export default function Auctions() {
             const response = await axios.get('/auctions'); // Replace with your API endpoint
             console.log(response.data)
             setAuctions(response.data.auctions);
+            setLoading(false);
         } catch (error) {
             console.error('Error fetching auction data:', error);
+            setLoading(false);
         }
     };
 
@@ -68,6 +79,9 @@ export default function Auctions() {
     }, []);
 
     const handleModifiedAuctionList = (editedAuction: IAuction) => {
+
+        console.log("EDITED AUCTION", editedAuction)
+
         setAuctions((prevAuctions) => {
             // Check if the edited coupon already exists in the list
             const couponExists = prevAuctions.some((auction) => auction._id === editedAuction?._id);
@@ -121,13 +135,12 @@ export default function Auctions() {
             // User confirmed the deletion, call the delete function
             handleDeleteCoupon(auctionId);
         }
-    };
-
+    }
 
     return (
         <>
             <Modal width={1000} closable={false} open={isModalOpen} footer={null} onCancel={() => { setIsModalOpen(false) }}>
-                <AddAuction onAuctionEdited={handleModifiedAuctionList} editedAuction={editedAuctionDetails}/>
+                <AddAuction onAuctionEdited={handleModifiedAuctionList} editedAuction={editedAuctionDetails} />
             </Modal>
             <Tabs
                 className='flex flex-1'
@@ -136,79 +149,85 @@ export default function Auctions() {
                 tabBarExtraContent={slot}
                 onChange={handleTabChange}
             >
-                <TabPane tab={<span><InboxOutlined />Live</span>} key="1" >
+                <TabPane tab={<span><InboxOutlined />Live</span>} key="1">
                     <div className='p-6 gap-12 flex flex-wrap'>
-                        {auctions
-                            .filter((auction) => auction.status === 'In Progress')
-                            .map((auction) => (
-                                <AuctionCard
-                                    key={auction._id}
-                                    id={auction._id}
-                                    image={auction.image}
-                                    live={auction.status === 'In Progress'}
-                                    startAt={auction.start_datetime.toString()}
-                                    title={auction.title}
-                                    description={auction.description}
-                                    openingBidAmount={`$${auction.opening_bid_amount}`}
-                                    modifyable={false}
-                                />
-                            ))}
+                        {loading ? (
+                            <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-white bg-opacity-80 z-50">
+                                <Spin size='large' tip="Loading..." />
+                            </div>
+                        ) : auctions.filter((auction) => auction.status === 'In Progress').length > 0 ? (
+                            auctions
+                                .filter((auction) => auction.status === 'In Progress')
+                                .map((auction) => (
+                                    <AuctionCard
+                                        key={auction._id}
+                                        id={auction._id}
+                                        image={auction.image}
+                                        live={auction.status === 'In Progress'}
+                                        startAt={auction.start_datetime.toString()}
+                                        title={auction.title}
+                                        description={auction.description}
+                                        openingBidAmount={`$${auction.opening_bid_amount}`}
+                                        modifyable={false}
+                                    />
+                                ))
+                        ) : <NoAuction />
+                        }
                     </div>
                 </TabPane>
                 <TabPane tab={<span><ClockCircleOutlined />Upcoming</span>} key="2" >
                     <div className='p-6 gap-12 flex flex-wrap'>
-                        {auctions
-                            .filter((auction) => auction.status === 'Not Started')
-                            .map((auction) => (
-                                <AuctionCard
-                                    key={auction._id}
-                                    id={auction._id}
-                                    image={auction.image}
-                                    live={auction.status === 'In Progress'}
-                                    startAt={auction.start_datetime.toString()}
-                                    title={auction.title}
-                                    description={auction.description}
-                                    openingBidAmount={`$${auction.opening_bid_amount}`}
-                                    modifyable={true}
-                                    handleDeleteConfirmation={handleDeleteConfirmation}
-                                    handleEditCoupon={handleEditCoupon}
-                                />
-                            ))}
+                        {loading ? (
+                            <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-white bg-opacity-80 z-50">
+                                <Spin size='large' tip="Loading..." />
+                            </div>
+                        ) : auctions.filter((auction) => auction.status === 'Not Started').length > 0 ? (
+                            auctions
+                                .filter((auction) => auction.status === 'Not Started')
+                                .map((auction) => (
+                                    <AuctionCard
+                                        key={auction._id}
+                                        id={auction._id}
+                                        image={auction.image}
+                                        startAt={auction.start_datetime.toString()}
+                                        title={auction.title}
+                                        description={auction.description}
+                                        openingBidAmount={`$${auction.opening_bid_amount}`}
+                                        modifyable={true}
+                                        handleDeleteConfirmation={handleDeleteConfirmation}
+                                        handleEditCoupon={handleEditCoupon}
+                                    />
+                                ))
+                        ) : <NoAuction />
+                        }
                     </div>
                 </TabPane>
                 <TabPane tab={<span><CheckCircleOutlined />Completed</span>} key="3" >
                     <div className='p-6 gap-12 flex flex-wrap'>
-                        {auctions
-                            .filter((auction) => auction.status === 'Ended')
-                            .map((auction) => (
-                                <AuctionCard
-                                    key={auction._id}
-                                    id={auction._id}
-                                    image={auction.image}
-                                    live={auction.status === 'In Progress'}
-                                    startAt={auction.start_datetime.toString()}
-                                    title={auction.title}
-                                    description={auction.description}
-                                    openingBidAmount={`$${auction.opening_bid_amount}`}
-                                    modifyable={false}
-                                />
-                            ))}
+                        {loading ? (
+                            <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-white bg-opacity-80 z-50">
+                                <Spin size='large' tip="Loading..." />
+                            </div>
+                        ) : auctions.filter((auction) => auction.status === 'Ended').length > 0 ? (
+                            auctions
+                                .filter((auction) => auction.status === 'Ended')
+                                .map((auction) => (
+                                    <AuctionCard
+                                        key={auction._id}
+                                        id={auction._id}
+                                        image={auction.image}
+                                        live={auction.status === 'In Progress'}
+                                        startAt={auction.start_datetime.toString()}
+                                        title={auction.title}
+                                        description={auction.description}
+                                        openingBidAmount={`$${auction.opening_bid_amount}`}
+                                        modifyable={false}
+                                    />
+                                ))
+                        ) : <NoAuction />
+                        }
                     </div>
                 </TabPane>
-                {/* <TabPane tab={<span><ClockCircleOutlined />All</span>} key="4" >
-                    <div className='my-4 grid grid-cols-3'>
-                        {auctionData.map((auction) => (
-                            <AuctionCard
-                                key={auction._id}
-                                live={auction.status === 'In Progress'}
-                                startAt={auction.start_datetime.toString()}
-                                title={auction.title}
-                                description={auction.description}
-                                openingBidAmount={`$${auction.opening_bid_amount}`}
-                            />
-                        ))}
-                    </div>
-                </TabPane> */}
             </Tabs>
         </>
     )

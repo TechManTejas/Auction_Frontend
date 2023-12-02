@@ -3,6 +3,7 @@ import { Tabs, Input, Button, message } from 'antd';
 import { UserOutlined, UserAddOutlined, LockOutlined, EyeOutlined, MailOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import axios from "../api/axios"
+import { Context } from '../context/context.provider';
 
 const { TabPane } = Tabs;
 
@@ -11,6 +12,9 @@ interface AuthenticationProps {
   }
 
 const Login: React.FC = () => {
+
+    const { setUserAuthenticated, setAuthModalOpen } = Context();
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -21,7 +25,9 @@ const Login: React.FC = () => {
             localStorage.setItem('auction-user-token', response.data.user._id);
             localStorage.setItem('auction-user-name', response.data.user.name);
             message.success('Sign in successful');
-            // Add any additional logic you need after successful login
+            setUserAuthenticated(true)
+            setAuthModalOpen(false)
+            
         } catch (error: any) {
             console.error(error.response.data);
             message.error('Invalid credentials');

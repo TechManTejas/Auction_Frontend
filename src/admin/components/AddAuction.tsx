@@ -5,6 +5,7 @@ import AuctionCard from './AuctionCardPrototype';
 import { useState } from 'react';
 import axios from "../../api/axios"
 import { IAuction } from '../../types/auction.types';
+import './DatePicker.css'
 
 interface AuctionFormProps {
     editedAuction?: IAuction | null; // Include the editedCoupon prop
@@ -66,7 +67,8 @@ const AddAuction: React.FC<AuctionFormProps> = ({ editedAuction, onAuctionEdited
 
                 // Check if the response indicates a successful creation
                 if (response.status === 201 || response.status === 200) {
-                    const editedAuction = response.data.auction;
+                    const editedAuction = response.data;
+                    console.log(editedAuction, response.data)
                     message.success('Auction saved successfully!');
                     onAuctionEdited(editedAuction);
                     resetForm({
@@ -220,7 +222,7 @@ const AddAuction: React.FC<AuctionFormProps> = ({ editedAuction, onAuctionEdited
                 {/* Add other form items for images if needed */}
 
                 <Form.Item wrapperCol={{ offset: 8, span: 14 }}>
-                    <Button type="dashed" htmlType="submit">
+                    <Button type="primary" className='bg-[#1890FF] w-full font-semibold' htmlType="submit">
                         Submit
                     </Button>
                 </Form.Item>

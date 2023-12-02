@@ -1,7 +1,8 @@
 import React from "react";
-import { Button } from "antd";
+import { Button, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import Placeholder from "../assets/images/placeholder.png";
+import { Context } from "../context/context.provider";
 
 interface AuctionCardProps {
     id: string;
@@ -14,12 +15,26 @@ interface AuctionCardProps {
 }
 
 const AuctionCard: React.FC<AuctionCardProps> = ({ id, live = false, image, startAt, title, description, openingBidAmount }) => {
-    
+
+    const { userAuthenticated, setAuthModalOpen } = Context();
+
     const navigate = useNavigate()
 
     const handleEnterAuction = () => {
-        localStorage.setItem('auction-room-id', id);
-        navigate('/auction');
+        if (userAuthenticated) {
+            localStorage.setItem('auction-room-id', id);
+            if (live) {
+                // If it's a live auction, perform actions for entering the auction
+                navigate('/auction');
+            } else {
+                // If it's not a live auction, perform actions for registering
+                // Add your registration logic here
+                message.success("Registered for the auction");
+            }
+        } else {
+            // If the user is not authenticated, open the authentication modal
+            setAuthModalOpen(true);
+        }
     };
 
     return (

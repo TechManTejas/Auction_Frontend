@@ -1,4 +1,3 @@
-import { useState } from "react";
 import AdminNavbar from "./admin/components/Navbar";
 import Sidebar from "./admin/components/Sidebar";
 import Auctions from "./admin/pages/Auctions";
@@ -10,18 +9,17 @@ import Auction from "./pages/Auction";
 import Home from "./pages/Home";
 import Result from "./pages/Result";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom"
+import { Context } from "./context/context.provider";
+import Authentication from "./admin/pages/Authentication";
 
 
 const UserRoutes: React.FC = () => {
 
-  const [userAuthenticated, setUserAuthenticated] = useState<boolean>(!!localStorage.getItem('auction-user-token'))
+  const { userAuthenticated } = Context();
 
   return (
     <>
-      <UserNavbar
-        userAuthenticated={userAuthenticated}
-        setUserAuthenticated={setUserAuthenticated}
-      />
+      <UserNavbar />
       <Routes>
         {userAuthenticated && (
           <>
@@ -43,12 +41,20 @@ const AdminRoutes: React.FC = () => {
     <>
       <AdminNavbar />
       <div className='flex'>
-        <Sidebar />
+        {false &&
+          <Sidebar />
+        }
         <Routes>
-          <Route path="/" element={<Navigate to={"auctions"} />} />
-          <Route path="/auctions" element={<Auctions />} />
-          <Route path="/payments" element={<Payments />} />
-          <Route path="/users" element={<Users />} />
+          {false && (
+            <>
+              <Route path="/" element={<Navigate to={"auctions"} />} />
+              <Route path="/auctions" element={<Auctions />} />
+              <Route path="/payments" element={<Payments />} />
+              <Route path="/users" element={<Users />} />
+            </>
+          )}
+          <Route path="/" element={<Navigate to={"auth"} />} />
+          <Route path="/auth" element={<Authentication />} />
         </Routes>
       </div>
     </>

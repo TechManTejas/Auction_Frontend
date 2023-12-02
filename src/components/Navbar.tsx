@@ -2,18 +2,15 @@ import { Button, Modal, message } from "antd"
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import Autentication from "./Autentication";
+import { Context } from "../context/context.provider";
 
-interface UserNavbarProps {
-    userAuthenticated: boolean;
-    setUserAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
-}
+const UserNavbar: React.FC = () => {
 
-const UserNavbar: React.FC<UserNavbarProps> = ({ userAuthenticated, setUserAuthenticated }) => {
+    const { userAuthenticated, setUserAuthenticated, authModalOpen, setAuthModalOpen } = Context();
 
     const navigate = useNavigate();
 
     const [username, setUsername] = useState<string | null>(null)
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [defaultTab, setDefaultTab] = useState('1')
 
     useEffect(() => {
@@ -27,14 +24,15 @@ const UserNavbar: React.FC<UserNavbarProps> = ({ userAuthenticated, setUserAuthe
         localStorage.removeItem('auction-user-name');
 
         setUserAuthenticated(false);
-        message.success("User logged out successfully")
 
+        message.success("User logged out successfully")
+        
         navigate('/');
     };
 
     return (
         <>
-            <Modal closable={false} open={isModalOpen} footer={null} onCancel={() => { setIsModalOpen(false) }}>
+            <Modal closable={false} open={authModalOpen} footer={null} onCancel={() => { setAuthModalOpen(false) }}>
                 <Autentication defaultTab={defaultTab}/>
             </Modal>
             <div className='flex justify-between items-center w-full text-xl p-3'>
@@ -54,13 +52,13 @@ const UserNavbar: React.FC<UserNavbarProps> = ({ userAuthenticated, setUserAuthe
                             <div>
                                 <Button onClick={() => {
                                     setDefaultTab('1')
-                                    setIsModalOpen(true)
+                                    setAuthModalOpen(true)
                                 }} size={"small"} className="rounded-none bg-[#1677ff] text-white ">Log in</Button>
                             </div>
                             <div>
                                 <Button onClick={() => {
                                     setDefaultTab('2')
-                                    setIsModalOpen(true)
+                                    setAuthModalOpen(true)
                                 }} size={"small"} className="rounded-none border-[1.5px]">Register</Button>
                             </div>
                         </div>
