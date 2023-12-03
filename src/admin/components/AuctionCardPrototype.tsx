@@ -7,7 +7,7 @@ interface AuctionCardProps {
     startAt: string;
     title: string;
     description: string;
-    openingBidAmount: string;
+    openingBidAmount: number;
     image: string,
 }
 

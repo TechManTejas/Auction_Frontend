@@ -7,6 +7,8 @@ export interface IAuction {
     image: string;
     start_datetime: Date;
     duration: number;
+    durationHours: number;
+    durationMinutes: number;
     opening_bid_amount: number;
     logs: Record<string, unknown>[];
     raise_options: Record<string, unknown>;

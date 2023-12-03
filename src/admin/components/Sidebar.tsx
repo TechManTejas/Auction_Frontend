@@ -2,8 +2,9 @@ import React from 'react';
 import { Layout, Menu } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import {
-    BookOutlined,
-    UserOutlined,
+    BookOutlined, 
+    // CreditCardOutlined,
+    // UserOutlined,
 } from '@ant-design/icons';
 
 const { Sider } = Layout;
@@ -30,9 +31,9 @@ const Sidebar: React.FC = () => {
                 {/* <Menu.Item key="Payments" icon={<CreditCardOutlined />}>
                     Payments
                 </Menu.Item> */}
-                <Menu.Item key="Users" icon={<UserOutlined />}>
+                {/* <Menu.Item key="Users" icon={<UserOutlined />}>
                     Users
-                </Menu.Item>
+                </Menu.Item> */}
             </Menu>
         </Sider>
     );

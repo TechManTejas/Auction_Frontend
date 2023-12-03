@@ -1,8 +1,8 @@
-import { Form, Input, DatePicker, InputNumber, Upload, Button, message } from 'antd';
+import { Form, Input, DatePicker, InputNumber, Upload, Button, message, Space } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { useFormik } from 'formik';
 import AuctionCard from './AuctionCardPrototype';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from "../../api/axios"
 import { IAuction } from '../../types/auction.types';
 import './DatePicker.css'
@@ -15,9 +15,45 @@ interface AuctionFormProps {
 const AddAuction: React.FC<AuctionFormProps> = ({ editedAuction, onAuctionEdited }) => {
 
     // Extract id from editedCoupon or set it to undefined
-    const id = editedAuction?._id || undefined;
+    const [id, setId] = useState<string | null>(null)
 
+    const [loading, setLoading] = useState(false);
     const [imageURL, setImageURL] = useState('')
+
+    useEffect(() => {
+        setId(editedAuction?._id || null);
+
+        setImageURL(editedAuction?.image.toString() || '')
+
+        // Reset form values when editedAuction changes
+        formik.resetForm({
+            values: {
+                image: null,
+                title: 'Title',
+                description: 'Description',
+                start_datetime: new Date(),
+                durationHours: 0,
+                durationMinutes: 15,
+                opening_bid_amount: 1000,
+                raise_option1: 100,
+                raise_option2: 500,
+                raise_option3: 1000,
+                raise_option4: 2000,
+                ...(editedAuction && {
+                    title: editedAuction.title || 'Title',
+                    description: editedAuction.description || 'Description',
+                    start_datetime: new Date(editedAuction.start_datetime),
+                    durationHours: editedAuction.durationHours || 0,
+                    durationMinutes: editedAuction.durationMinutes || 15,
+                    opening_bid_amount: editedAuction.opening_bid_amount || 1000,
+                    raise_option1: JSON.parse(editedAuction.raise_options.toString())['1'] || 100,
+                    raise_option2: JSON.parse(editedAuction.raise_options.toString())['2'] || 500,
+                    raise_option3: JSON.parse(editedAuction.raise_options.toString())['3'] || 1000,
+                    raise_option4: JSON.parse(editedAuction.raise_options.toString())['4'] || 2000,
+                }),
+            },
+        });
+    }, [editedAuction])
 
     const formik = useFormik({
         initialValues: {
@@ -32,9 +68,24 @@ const AddAuction: React.FC<AuctionFormProps> = ({ editedAuction, onAuctionEdited
             raise_option2: 500,
             raise_option3: 1000,
             raise_option4: 2000,
+            ...((editedAuction && {
+                title: editedAuction.title || 'Title',
+                description: editedAuction.description || 'Description',
+                start_datetime: new Date(editedAuction.start_datetime),
+                durationHours: editedAuction.durationHours || 0,
+                durationMinutes: editedAuction.durationMinutes || 15,
+                opening_bid_amount: editedAuction.opening_bid_amount || 1000,
+                raise_option1: JSON.parse(editedAuction.raise_options.toString())['1'] || 100,
+                raise_option2: JSON.parse(editedAuction.raise_options.toString())['2'] || 500,
+                raise_option3: JSON.parse(editedAuction.raise_options.toString())['3'] || 1000,
+                raise_option4: JSON.parse(editedAuction.raise_options.toString())['4'] || 2000,
+            })) ||
+            {},
         },
         onSubmit: async (values, { resetForm }) => {
             try {
+                setLoading(true); // Set loading to true when the form is being submitted
+
                 // Calculate duration in milliseconds
                 const durationMilliseconds = ((values.durationMinutes * 60) + (values.durationHours * 60 * 60)) * 1000;
 
@@ -57,7 +108,7 @@ const AddAuction: React.FC<AuctionFormProps> = ({ editedAuction, onAuctionEdited
 
                 let response;
 
-                if (id) {
+                if (editedAuction?._id) {
                     // Edit existing auction
                     response = await axios.put(`/auctions/${id}`, formData);
                 } else {
@@ -90,29 +141,17 @@ const AddAuction: React.FC<AuctionFormProps> = ({ editedAuction, onAuctionEdited
                     console.error('Auction creation/updation failed. Unexpected response:', response);
                     message.error('Failed to save auction. Please try again.');
                 }
+
+                setLoading(false);
+
             } catch (error) {
                 console.error('Error saving auction:', error);
                 message.error('Failed to save auction. Please try again.');
+            } finally {
+                setLoading(false); // Ensure loading is set to false in case of an error
             }
         },
     });
-
-    // useEffect(() => {
-    //     if (editedAuction) {
-    //         console.log(editedAuction)
-    //         const { start_datetime, ...rest } = editedAuction;
-    //         formik.setValues({
-    //             ...rest,
-    //             start_datetime: moment(start_datetime),
-    //         });
-    //         setImageURL(editedAuction.image);
-
-    //         console.log(formik.values)
-    //     } else {
-    //         formik.resetForm();
-    //         setImageURL('');
-    //     }
-    // }, [editedAuction]);
 
     // Image Upload Configuration
     const imageUploadProps = {
@@ -136,7 +175,7 @@ const AddAuction: React.FC<AuctionFormProps> = ({ editedAuction, onAuctionEdited
                 layout="horizontal"
                 onFinish={formik.handleSubmit}
             >
-                <Form.Item label="Image" name="image">
+                <Form.Item label="Image">
                     <Upload
                         {...imageUploadProps}
                     >
@@ -144,22 +183,29 @@ const AddAuction: React.FC<AuctionFormProps> = ({ editedAuction, onAuctionEdited
                     </Upload>
                 </Form.Item>
 
-                <Form.Item label="Title" name="title" rules={[{ required: true, message: 'Please enter the title!' }]}>
-                    <Input onChange={formik.handleChange} value={formik.values.title} />
+                <Form.Item label="Title" rules={[{ required: true, message: 'Please enter the title!' }]}>
+                    <Input onChange={(e) => {
+                        formik.setFieldValue('title', e.target.value)
+                    }} value={formik.values.title} />
                 </Form.Item>
 
-                <Form.Item label="Description" name="description" rules={[{ required: true, message: 'Please enter the description!' }]}>
-                    <Input.TextArea onChange={formik.handleChange} value={formik.values.description} />
+                <Form.Item label="Description" rules={[{ required: true, message: 'Please enter the description!' }]}>
+                    <Input.TextArea onChange={(e) => {
+                        formik.setFieldValue('description', e.target.value)
+                    }} value={formik.values.description} />
                 </Form.Item>
 
-                <Form.Item label="Start Date and Time" name="start_datetime" rules={[{ required: true, message: 'Please select the start date and time!' }]}>
-                    <DatePicker showTime onChange={(date, dateString) => {
-                        console.log(date)
-                        formik.setFieldValue('start_datetime', dateString)
-                    }} />
+                <Form.Item label="Start Date and Time" rules={[{ required: true, message: 'Please select the start date and time!' }]}>
+                    <DatePicker
+                        showTime
+                        onChange={(date, dateString) => {
+                            console.log(date, dateString)
+                            formik.setFieldValue('start_datetime', dateString)
+                        }}
+                    />
                 </Form.Item>
 
-                <Form.Item label="Duration" name="duration">
+                <Form.Item label="Duration">
                     <InputNumber
                         style={{ width: '50%' }}
                         min={0}
@@ -178,12 +224,18 @@ const AddAuction: React.FC<AuctionFormProps> = ({ editedAuction, onAuctionEdited
                     <span style={{ margin: '0 8px' }}>minutes</span>
                 </Form.Item>
 
-                <Form.Item label="Opening Bid Amount" name="opening_bid_amount" rules={[{ required: true, message: 'Please enter the opening bid amount!' }]}>
-                    <InputNumber min={0} onChange={value => formik.setFieldValue('opening_bid_amount', value)} value={formik.values.opening_bid_amount} />
+                <Form.Item label="Opening Bid Amount" rules={[{ required: true, message: 'Please enter the opening bid amount!' }]}>
+                    <InputNumber
+                        min={0}
+                        onChange={(value) => {
+                            formik.setFieldValue('opening_bid_amount', value)
+                        }}
+                        value={formik.values.opening_bid_amount}
+                    />
                 </Form.Item>
 
                 <Form.Item label="Raise Options" name="raise_options">
-                    <Input.Group compact>
+                    <Space.Compact>
                         <InputNumber
                             min={0}
                             onChange={value =>
@@ -216,13 +268,18 @@ const AddAuction: React.FC<AuctionFormProps> = ({ editedAuction, onAuctionEdited
                             value={formik.values.raise_option4}
                             style={{ width: '50%' }}
                         />
-                    </Input.Group>
+                    </Space.Compact>
                 </Form.Item>
 
                 {/* Add other form items for images if needed */}
 
                 <Form.Item wrapperCol={{ offset: 8, span: 14 }}>
-                    <Button type="primary" className='bg-[#1890FF] w-full font-semibold' htmlType="submit">
+                    <Button
+                        type="primary"
+                        className='bg-[#1890FF] w-full font-semibold'
+                        htmlType="submit"
+                        loading={loading}
+                    >
                         Submit
                     </Button>
                 </Form.Item>
@@ -234,7 +291,7 @@ const AddAuction: React.FC<AuctionFormProps> = ({ editedAuction, onAuctionEdited
                     startAt={formik.values.start_datetime.toString()}
                     title={formik.values.title}
                     description={formik.values.description}
-                    openingBidAmount={formik.values.opening_bid_amount.toString()}
+                    openingBidAmount={formik.values.opening_bid_amount}
                     live={false}
                 />
             </div>

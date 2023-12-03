@@ -5,22 +5,8 @@ import AddAuction from '../components/AddAuction';
 import axios from '../../api/axios';
 import AuctionCard from '../components/AuctionCard';
 import { confirmation } from '../components/Confirmation';
+import { IAuction } from '../../types/auction.types';
 const { TabPane } = Tabs;
-
-interface IAuction {
-    _id: string;
-    winner_id: string | null;
-    winner_bid_amount: number;
-    title: string;
-    description: string;
-    image: string;
-    start_datetime: Date;
-    duration: number;
-    opening_bid_amount: number;
-    logs: Record<string, unknown>[];
-    raise_options: Record<string, unknown>;
-    status: 'Not Started' | 'In Progress' | 'Ended';
-}
 
 export default function Auctions() {
 
@@ -35,7 +21,17 @@ export default function Auctions() {
     const [position] = useState<PositionType[]>(['left']);
 
     const OperationsSlot: Record<PositionType, React.ReactNode> = {
-        left: <Button type='primary' size='large' className="mb-4 bg-[#1890FF] primary-6" onClick={() => { setIsModalOpen(true) }}>Add Auction</Button>,
+        left:
+            <Button
+                type='primary'
+                size='large'
+                className="mb-4 bg-[#1890FF] primary-6"
+                onClick={() => {
+                    setEditedAuctionDetails(null)
+                    setIsModalOpen(true)
+                }}>
+                Add Auction
+            </Button>,
     };
 
     const NoAuction: React.FC = () => {
@@ -167,7 +163,7 @@ export default function Auctions() {
                                         startAt={auction.start_datetime.toString()}
                                         title={auction.title}
                                         description={auction.description}
-                                        openingBidAmount={`$${auction.opening_bid_amount}`}
+                                        openingBidAmount={auction.opening_bid_amount}
                                         modifyable={false}
                                     />
                                 ))
@@ -192,7 +188,7 @@ export default function Auctions() {
                                         startAt={auction.start_datetime.toString()}
                                         title={auction.title}
                                         description={auction.description}
-                                        openingBidAmount={`$${auction.opening_bid_amount}`}
+                                        openingBidAmount={auction.opening_bid_amount}
                                         modifyable={true}
                                         handleDeleteConfirmation={handleDeleteConfirmation}
                                         handleEditCoupon={handleEditCoupon}
@@ -220,7 +216,7 @@ export default function Auctions() {
                                         startAt={auction.start_datetime.toString()}
                                         title={auction.title}
                                         description={auction.description}
-                                        openingBidAmount={`$${auction.opening_bid_amount}`}
+                                        openingBidAmount={auction.opening_bid_amount}
                                         modifyable={false}
                                     />
                                 ))

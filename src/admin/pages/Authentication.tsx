@@ -4,6 +4,7 @@ import { Context } from "../../context/context.provider";
 import axios from "../../api/axios"
 import { Button, Input, message } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 export default function Authentication() {
     const { setAdminAuthenticated } = Context();
@@ -11,13 +12,15 @@ export default function Authentication() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
+    const navigate = useNavigate()
+
     const handleLogin = async () => {
         try {
             const response = await axios.post('/admins/signin', { username, password });
             console.log(response.data);
             localStorage.setItem('auction-admin-token', response.data.user._id);
-            localStorage.setItem('auction-admin-name', response.data.user.name);
             message.success('Sign in successful');
+            navigate('/admin/auctions')
             setAdminAuthenticated(true)
 
         } catch (error: any) {

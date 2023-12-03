@@ -9,7 +9,7 @@ interface AuctionCardProps {
     startAt: string;
     title: string;
     description: string;
-    openingBidAmount: string;
+    openingBidAmount: number;
     modifyable: boolean;
     handleDeleteConfirmation?: (id: string) => void;
     handleEditCoupon?: (id: string) => void;
@@ -51,7 +51,7 @@ const AuctionCard: React.FC<AuctionCardProps> = ({ id, live = false, image, star
                     {
                         modifyable &&
                         <div className="w-full flex justify-between items-center">
-                            <Button className="bg-[#1890FF] primary-6 text-white px-5 rounded-sm" onClick={() => {
+                            <Button type="primary" className="bg-[#1890FF] primary-6 text-white px-5 rounded-sm" onClick={() => {
                                 if (handleEditCoupon) {
                                     handleEditCoupon(id)
                                 }

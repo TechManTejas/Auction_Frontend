@@ -37,15 +37,17 @@ const UserRoutes: React.FC = () => {
 
 const AdminRoutes: React.FC = () => {
 
+  const { adminAuthenticated } = Context();
+
   return (
     <>
       <AdminNavbar />
       <div className='flex'>
-        {false &&
+        {adminAuthenticated &&
           <Sidebar />
         }
         <Routes>
-          {false && (
+          {adminAuthenticated && (
             <>
               <Route path="/" element={<Navigate to={"auctions"} />} />
               <Route path="/auctions" element={<Auctions />} />
@@ -53,8 +55,12 @@ const AdminRoutes: React.FC = () => {
               <Route path="/users" element={<Users />} />
             </>
           )}
-          <Route path="/" element={<Navigate to={"auth"} />} />
-          <Route path="/auth" element={<Authentication />} />
+          {!adminAuthenticated && (
+            <>
+              <Route path="/" element={<Navigate to={"auth"} />} />
+              <Route path="/auth" element={<Authentication />} />
+            </>
+          )}
         </Routes>
       </div>
     </>
