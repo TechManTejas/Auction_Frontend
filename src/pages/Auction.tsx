@@ -116,10 +116,10 @@ export default function Auction() {
         {liveAuctionDetails && (
           <div className="text-center space-y-2">
             <div className="text-4xl font-medium text-[#002766]">
-              Winner: {liveAuctionDetails.winnerName || "'No one started yet'"}
+              Current Highest Bidder: {liveAuctionDetails.winnerName || "'No one started yet'"}
             </div>
             <div className="text-4xl font-medium text-[#002766]">
-              Winning Bid Amount: ${liveAuctionDetails.winnerBidAmount}
+              Current Bid Amount: ${liveAuctionDetails.winnerBidAmount}
             </div>
             <div className="text-white bg-[#52C41A] success font-semibold px-2 rounded-t-sm animate-pulse text-center">
             LIVE
