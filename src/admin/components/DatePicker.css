@@ -1,6 +1,0 @@
-/* Style the OK button in the DatePicker */
-.custom-date-picker .ant-picker-footer .ant-picker-ok button {
-    background-color: #1890ff; /* Set the background color to blue */
-    color: #ffffff; /* Set the text color to white */
-    border-color: #1890ff; /* Set the border color to blue */
-}

@@ -8,9 +8,9 @@ const { TabPane } = Tabs;
 
 const NoAuction: React.FC = () => {
   return (
-      <div className='text-4xl font-bold text-center text-[#002766]'>
-          "Currently, no auctions are available. Kindly revisit later for updates."
-      </div>
+    <div className='text-4xl font-bold text-center text-[#002766]'>
+      "Currently, no auctions are available. Kindly revisit later for updates."
+    </div>
   )
 }
 
@@ -82,60 +82,62 @@ export default function Home() {
             </div>
           </Carousel>
         </div>
-        <div className='space-y-2 py-5'>
-          <div className='text-4xl font-medium text-center text-[#002766]'>
-            Auctions
+        <div>
+          <div className='space-y-2 py-5'>
+            <div className='text-4xl font-medium text-center text-[#002766]'>
+              Auctions
+            </div>
+            <div className='text-center'>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam posuere gravida sapien at sollicitudin.
+            </div>
           </div>
-          <div className='text-center'>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam posuere gravida sapien at sollicitudin.
-          </div>
-        </div>
-        <div className='flex flex-col justify-center items-center w-full'>
-          <div className='m-4'>
-            <Tabs
-              defaultActiveKey="In Progress"
-              tabPosition="top"
-              onChange={(key) => {
-                setSelectedTab(key)
-              }}
-            >
-              <TabPane tab={<span><PlayCircleOutlined /> Active</span>} key="In Progress" />
-              <TabPane tab={<span><ClockCircleOutlined /> Upcoming</span>} key="Not Started" />
-            </Tabs >
-          </div>
-          <div className='h-[460px] flex justify-center items-center space-x-12 my-4'>
-            {loading ? (
-              // Show loading spin when auctions are being fetched
-              <div className="flex items-center justify-center w-full">
-                <Spin size="large" tip="Loading..." />
-              </div>
-            ) : auctions.length > 0 ? (
-              // Show auctions if available
-              auctions.map((auction) => (
-                <AuctionCard
-                  key={auction._id}
-                  id={auction._id}
-                  image={auction.image}
-                  live={auction.status === 'In Progress'}
-                  startAt={auction.start_datetime.toString()}
-                  title={auction.title}
-                  description={auction.description}
-                  openingBidAmount={`$${auction.opening_bid_amount}`}
-                />
-              ))
-            ) : <NoAuction/>}
-          </div>
+          <div className='flex flex-col justify-center items-center w-full'>
+            <div className='m-4'>
+              <Tabs
+                defaultActiveKey="In Progress"
+                tabPosition="top"
+                onChange={(key) => {
+                  setSelectedTab(key)
+                }}
+              >
+                <TabPane tab={<span><PlayCircleOutlined /> Active</span>} key="In Progress" />
+                <TabPane tab={<span><ClockCircleOutlined /> Upcoming</span>} key="Not Started" />
+              </Tabs >
+            </div>
+            <div className='h-[460px] flex justify-center items-center space-x-12 my-4'>
+              {loading ? (
+                // Show loading spin when auctions are being fetched
+                <div className="flex items-center justify-center w-full">
+                  <Spin size="large" tip="Loading..." />
+                </div>
+              ) : auctions.length > 0 ? (
+                // Show auctions if available
+                auctions.map((auction) => (
+                  <AuctionCard
+                    key={auction._id}
+                    id={auction._id}
+                    image={auction.image}
+                    live={auction.status === 'In Progress'}
+                    startAt={auction.start_datetime.toString()}
+                    title={auction.title}
+                    description={auction.description}
+                    openingBidAmount={`$${auction.opening_bid_amount}`}
+                  />
+                ))
+              ) : <NoAuction />}
+            </div>
 
-          <div className='m-4'>
-            <Pagination
-              current={page}
-              pageSize={pageSize}
-              total={totalAuctions}
-              onChange={(page) => {
-                setPage(page);
-                fetchData(page, { status: selectedTab });
-              }}
-            />
+            <div className='m-4'>
+              <Pagination
+                current={page}
+                pageSize={pageSize}
+                total={totalAuctions}
+                onChange={(page) => {
+                  setPage(page);
+                  fetchData(page, { status: selectedTab });
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>

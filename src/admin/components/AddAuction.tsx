@@ -5,7 +5,6 @@ import AuctionCard from './AuctionCardPrototype';
 import { useEffect, useState } from 'react';
 import axios from "../../api/axios"
 import { IAuction } from '../../types/auction.types';
-import './DatePicker.css'
 
 interface AuctionFormProps {
     editedAuction?: IAuction | null; // Include the editedCoupon prop

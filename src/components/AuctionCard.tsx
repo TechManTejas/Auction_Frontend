@@ -70,7 +70,7 @@ const AuctionCard: React.FC<AuctionCardProps> = ({ id, live = false, image, star
                     <div className="text-sm h-20 overflow-hidden overflow-ellipsis whitespace-normal line-clamp-4">{description}</div>
                     <div className="text-[#096DD9] primary-7">Opening Bid: {openingBidAmount}</div>
                     <div className="w-full flex justify-center items-center">
-                        <Button type="primary" className="bg-[#1890FF] primary-6 px-5 rounded-sm" onClick={handleEnterAuction}>{live ? "Enter" : "Register"}</Button>
+                        <Button type="primary" className="bg-[#1890FF] primary-6 px-5 rounded-lg" onClick={handleEnterAuction}>{live ? "Enter" : "Register"}</Button>
                     </div>
                 </div>
             </div>

@@ -1,8 +1,6 @@
 import AdminNavbar from "./admin/components/Navbar";
 import Sidebar from "./admin/components/Sidebar";
 import Auctions from "./admin/pages/Auctions";
-import Payments from "./admin/pages/Payments";
-import Users from "./admin/pages/Users";
 import Footer from "./components/Footer";
 import UserNavbar from "./components/Navbar";
 import Auction from "./pages/Auction";
@@ -11,6 +9,10 @@ import Result from "./pages/Result";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom"
 import { Context } from "./context/context.provider";
 import Authentication from "./admin/pages/Authentication";
+import AuctionList from "./pages/AuctionList";
+import TenderList from "./pages/TenderList";
+import Tenders from "./admin/pages/Tenders";
+import TenderSubmissions from "./admin/pages/TenderSubmissions";
 
 
 const UserRoutes: React.FC = () => {
@@ -29,6 +31,8 @@ const UserRoutes: React.FC = () => {
         )}
         <Route path="/" element={<Navigate to={"home"} />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/auction-list" element={<AuctionList />} />
+        <Route path="/tender-list" element={<TenderList />} />
       </Routes>
       <Footer />
     </>
@@ -51,8 +55,8 @@ const AdminRoutes: React.FC = () => {
             <>
               <Route path="/" element={<Navigate to={"auctions"} />} />
               <Route path="/auctions" element={<Auctions />} />
-              <Route path="/payments" element={<Payments />} />
-              <Route path="/users" element={<Users />} />
+              <Route path="/tenders" element={<Tenders />} />
+              <Route path="/tenders-submissions/" element={<TenderSubmissions />} />
             </>
           )}
           {!adminAuthenticated && (

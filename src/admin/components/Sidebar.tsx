@@ -2,7 +2,7 @@ import React from 'react';
 import { Layout, Menu } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import {
-    BookOutlined, 
+    BookOutlined, FileOutlined,
     // CreditCardOutlined,
     // UserOutlined,
 } from '@ant-design/icons';
@@ -27,6 +27,9 @@ const Sidebar: React.FC = () => {
             >
                 <Menu.Item key="Auctions" icon={<BookOutlined />}>
                     Auctions
+                </Menu.Item>
+                <Menu.Item key="Tenders" icon={<FileOutlined />}>
+                    Tenders
                 </Menu.Item>
                 {/* <Menu.Item key="Payments" icon={<CreditCardOutlined />}>
                     Payments

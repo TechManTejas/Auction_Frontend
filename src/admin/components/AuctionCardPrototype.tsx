@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "antd";
 import Placeholder from "../../assets/images/placeholder.png";
 
 interface AuctionCardProps {
@@ -44,9 +43,9 @@ const AuctionCard: React.FC<AuctionCardProps> = ({ live = false, startAt, title,
                     <div className="font-semibold overflow-hidden overflow-ellipsis whitespace-normal line-clamp-1">{title}</div>
                     <div className="text-sm h-20 overflow-hidden overflow-ellipsis whitespace-normal line-clamp-4">{description}</div>
                     <div className="text-[#096DD9] primary-7">Opening Bid: {openingBidAmount}</div>
-                    <div className="w-full flex justify-center items-center">
+                    {/* <div className="w-full flex justify-center items-center">
                         <Button className="bg-[#1890FF] primary-6 text-white px-5 rounded-sm">Register</Button>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>
