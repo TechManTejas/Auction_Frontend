@@ -5,6 +5,7 @@ import axios from "../api/axios"
 import { ITender } from '../types/tender.types';
 import TenderCard from '../components/TenderCard';
 import TenderForm from '../components/TenderForm';
+import Search from 'antd/es/input/Search';
 
 const NoTender: React.FC = () => {
     return (
@@ -29,6 +30,7 @@ const TenderList: React.FC = () => {
     const [pageSize] = useState<number>(15);
     const [selectedTab] = useState<string>(state.tab || 'In Progress');
     const [selectedTender, setSelectedTender] = useState<ITender | null>(null)
+    const [searchQuery, setSearchQuery] = useState<string>('');
 
     const openQuoteModal = (tender: ITender) => {
         setSelectedTender(tender);
@@ -48,6 +50,7 @@ const TenderList: React.FC = () => {
                     page: page,
                     pageSize: pageSize,
                     filter: JSON.stringify(filter),
+                    search: searchQuery,
                 },
             });
             console.log(response.data)
@@ -62,7 +65,7 @@ const TenderList: React.FC = () => {
 
     useEffect(() => {
         fetchData(page);
-    }, [selectedTab]);
+    }, [selectedTab, searchQuery]);
 
     return (
         <div>
@@ -77,6 +80,14 @@ const TenderList: React.FC = () => {
                     <div className='text-center'>
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam posuere gravida sapien at sollicitudin.
                     </div>
+                </div>
+                <div className='mb-4 w-full flex justify-center'>
+                    <Search
+                        className='w-[360px]'
+                        size={'large'}
+                        placeholder="Search..."
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
                 </div>
                 <div className='flex flex-col justify-center items-center w-full'>
                     <div className='min-h-[460px] flex justify-center items-center space-x-12 my-4'>

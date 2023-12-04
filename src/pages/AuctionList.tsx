@@ -6,6 +6,7 @@ import TabPane from 'antd/es/tabs/TabPane';
 import { ClockCircleOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import { IAuction } from '../types/auction.types';
 import axios from "../api/axios"
+import Search from 'antd/es/input/Search';
 
 const NoAuction: React.FC = () => {
     return (
@@ -28,6 +29,7 @@ const AuctionList: React.FC = () => {
     const [page, setPage] = useState<number>(1);
     const [pageSize] = useState<number>(15);
     const [selectedTab, setSelectedTab] = useState<string>(state.tab || 'In Progress');
+    const [searchQuery, setSearchQuery] = useState<string>('');
 
     const fetchData = async (page = 1, filter = {}) => {
         setLoading(true)
@@ -37,6 +39,7 @@ const AuctionList: React.FC = () => {
                     page: page,
                     pageSize: pageSize,
                     filter: JSON.stringify(filter),
+                    search: searchQuery,
                 },
             });
             console.log(response.data)
@@ -50,8 +53,8 @@ const AuctionList: React.FC = () => {
     };
 
     useEffect(() => {
-        fetchData(page, {status: selectedTab});
-    }, [selectedTab]);
+        fetchData(page, { status: selectedTab });
+    }, [selectedTab, searchQuery]);
 
     return (
         <div>
@@ -77,6 +80,14 @@ const AuctionList: React.FC = () => {
                             <TabPane tab={<span><ClockCircleOutlined /> Upcoming</span>} key="Not Started" />
                         </Tabs >
                     </div>
+                    <div className='mb-4 w-full flex justify-center'>
+                        <Search
+                            className='w-[360px]'
+                            size={'large'}
+                            placeholder="Search..."
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                    </div>
                     <div className='min-h-[460px] flex justify-center items-center space-x-12 my-4'>
                         {loading ? (
                             // Show loading spin when auctions are being fetched
@@ -101,7 +112,6 @@ const AuctionList: React.FC = () => {
                             </div>
                         ) : <NoAuction />}
                     </div>
-
                     <div className='m-4'>
                         <Pagination
                             current={page}
