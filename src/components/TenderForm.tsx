@@ -11,6 +11,7 @@ interface TenderFormProps {
 }
 
 const TenderForm: React.FC<TenderFormProps> = ({ tender }) => {
+
     const [currentStep, setCurrentStep] = useState(0);
     const [form] = Form.useForm();
 
@@ -43,31 +44,29 @@ const TenderForm: React.FC<TenderFormProps> = ({ tender }) => {
             const formattedExperience = `${experience} years`;
 
             const formData = new FormData();
-            formData.append('tenderId', tender.id);
+            formData.append('tenderId', tender._id);
             formData.append('companyName', companyName);
             formData.append('experience', formattedExperience);
             formData.append('quoteAmount', quoteAmount);
             formData.append('panNumber', panNumber);
             formData.append('gstNumber', gstNumber);
-            formData.append('incomeProof', incomeProof); // assuming only one file
-            formData.append('itReturnOrBankStatement', itReturnOrBankStatement); // assuming only one file
+            formData.append('incomeProof', incomeProof[0]?.originFileObj); // assuming only one file
+            formData.append('itReturnOrBankStatement', itReturnOrBankStatement[0]?.originFileObj); // assuming only one file
             formData.append('projectDetails1', projectDetails1);
             formData.append('projectDetails2', projectDetails2);
             formData.append('projectDetails3', projectDetails3);
 
-           
-
             // // Assuming you have a function to fetch and handle the API request
-            // const response = await axios.post('/tenderform/create', formData);
+            const response = await axios.post('/tenderform/create', formData);
 
-            // if (response.status === 200) {
-            //     const data = response.data;
-            //     message.success('Form submitted successfully:', data);
-            //     // Add any additional logic or redirect if needed
-            // } else {
-            //     console.error('Form submission failed:', response.statusText);
-            //     // Handle error as needed
-            // }
+            if (response.status === 201) {
+                const data = response.data;
+                message.success('Form submitted successfully:', data);
+                // Add any additional logic or redirect if needed
+            } else {
+                console.error('Form submission failed:', response.statusText);
+                // Handle error as needed
+            }
 
         } catch (error) {
             console.error('Form submission error:', error);
@@ -87,18 +86,12 @@ const TenderForm: React.FC<TenderFormProps> = ({ tender }) => {
         {
             title: 'Basic Information',
             content: (
-                <Form
-                    form={form}
-                    name="basic"
-                    initialValues={{ remember: true }}
-                    onFinish={onFinish}
-                    onFinishFailed={() => message.error('Form submission failed.')}
-                    labelCol={{ span: 5 }}
-                    wrapperCol={{ span: 16 }}
-                >
+                <>
                     <Form.Item
                         label="Company Name"
                         name="companyName"
+                        labelCol={{ span: 5 }}
+                        wrapperCol={{ span: 16 }}
                         rules={[{ required: true, message: 'Please input your company name!' }]}
                     >
                         <Input />
@@ -107,6 +100,8 @@ const TenderForm: React.FC<TenderFormProps> = ({ tender }) => {
                     <Form.Item
                         label="Experience"
                         name="experience"
+                        labelCol={{ span: 5 }}
+                        wrapperCol={{ span: 16 }}
                         rules={[{ required: true, message: 'Please input your experience!' }]}
                     >
                         <Input type="number" />
@@ -115,6 +110,8 @@ const TenderForm: React.FC<TenderFormProps> = ({ tender }) => {
                     <Form.Item
                         label="Quote Amount"
                         name="quoteAmount"
+                        labelCol={{ span: 5 }}
+                        wrapperCol={{ span: 16 }}
                         rules={[{ required: true, message: 'Please input the quote amount!' }]}
                     >
                         <Input type="number" />
@@ -123,6 +120,8 @@ const TenderForm: React.FC<TenderFormProps> = ({ tender }) => {
                     <Form.Item
                         label="PAN Number"
                         name="panNumber"
+                        labelCol={{ span: 5 }}
+                        wrapperCol={{ span: 16 }}
                         rules={[{ required: true, message: 'Please input your PAN number!' }]}
                     >
                         <Input />
@@ -131,6 +130,8 @@ const TenderForm: React.FC<TenderFormProps> = ({ tender }) => {
                     <Form.Item
                         label="GST Number"
                         name="gstNumber"
+                        labelCol={{ span: 5 }}
+                        wrapperCol={{ span: 16 }}
                         rules={[{ required: true, message: 'Please input your GST number!' }]}
                     >
                         <Input />
@@ -141,6 +142,8 @@ const TenderForm: React.FC<TenderFormProps> = ({ tender }) => {
                         name="incomeProof"
                         valuePropName="fileList"
                         getValueFromEvent={normFile}
+                        labelCol={{ span: 5 }}
+                        wrapperCol={{ span: 16 }}
                         rules={[{ required: true, message: 'Please upload your income proof!' }]}
                     >
                         <Upload name="incomeProof" beforeUpload={() => false}>
@@ -153,6 +156,8 @@ const TenderForm: React.FC<TenderFormProps> = ({ tender }) => {
                         name="itReturnOrBankStatement"
                         valuePropName="fileList"
                         getValueFromEvent={normFile}
+                        labelCol={{ span: 5 }}
+                        wrapperCol={{ span: 16 }}
                         rules={[{ required: true, message: 'Please upload your document!' }]}
                     >
                         <Upload name="itReturnOrBankStatement" beforeUpload={() => false}>
@@ -165,32 +170,27 @@ const TenderForm: React.FC<TenderFormProps> = ({ tender }) => {
                             Next
                         </Button>
                     </Form.Item>
-                </Form>
+                </>
             ),
         },
         {
             title: 'Project Details',
             content: (
-                <Form
-                    form={form}
-                    name="projectDetails"
-                    initialValues={{ remember: true }}
-                    onFinish={onFinish}
-                    onFinishFailed={() => message.error('Form submission failed.')}
-                    labelCol={{ span: 5 }}
-                    wrapperCol={{ span: 16 }}
-                >
-                    <Form.Item name="projectDetails1" label="Project Details 1">
+                <>
+                    <Form.Item name="projectDetails1" label="Project Details 1" labelCol={{ span: 5 }}
+                        wrapperCol={{ span: 16 }} >
                         <Input.TextArea style={{ height: '108px' }} />
                     </Form.Item>
-                    <Form.Item name="projectDetails2" label="Project Details 2">
+                    <Form.Item name="projectDetails2" label="Project Details 2" labelCol={{ span: 5 }}
+                        wrapperCol={{ span: 16 }}>
                         <Input.TextArea style={{ height: '108px' }} />
                     </Form.Item>
-                    <Form.Item name="projectDetails3" label="Project Details 3">
+                    <Form.Item name="projectDetails3" label="Project Details 3" labelCol={{ span: 5 }}
+                        wrapperCol={{ span: 16 }}>
                         <Input.TextArea style={{ height: '108px' }} />
                     </Form.Item>
 
-                    <Form.Item wrapperCol={{ offset: 5, span: 16 }}>
+                    <Form.Item wrapperCol={{ offset: 5, span: 16 }} >
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                             <Button type="primary" className='bg-[#1890FF] primary-6 px-5 rounded-lg' onClick={prevStep}>
                                 Previous
@@ -201,7 +201,7 @@ const TenderForm: React.FC<TenderFormProps> = ({ tender }) => {
                         </div>
                     </Form.Item>
 
-                </Form>
+                </>
             ),
         },
     ];
@@ -221,7 +221,21 @@ const TenderForm: React.FC<TenderFormProps> = ({ tender }) => {
                     <Step key={item.title} title={item.title} />
                 ))}
             </Steps>
-            <div className="steps-content">{steps[currentStep].content}</div>
+            <div className="steps-content">
+                <Form
+                    form={form}
+                    name="combinedForm"
+                    onFinish={onFinish}
+                    onFinishFailed={() => message.error('Form submission failed.')}
+                    encType="multipart/form-data"
+                >
+                    {steps.map((item, index) => (
+                        <div key={index} style={{ display: index === currentStep ? 'block' : 'none' }}>
+                            {item.content}
+                        </div>
+                    ))}
+                </Form>
+            </div>
         </div>
     );
 };
