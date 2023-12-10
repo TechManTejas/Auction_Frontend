@@ -1,18 +1,12 @@
-import { Carousel, Tabs, Pagination, Spin } from 'antd';
-import { PlayCircleOutlined, ClockCircleOutlined } from '@ant-design/icons';
-import { useEffect, useState } from 'react';
-import { IAuction } from '../types/auction.types';
-import axios from "../api/axios"
-import AuctionCard from '../components/AuctionCard';
-const { TabPane } = Tabs;
+import { Carousel} from 'antd';
 
-const NoAuction: React.FC = () => {
-  return (
-    <div className='text-4xl font-bold text-center text-[#002766]'>
-      "Currently, no auctions are available. Kindly revisit later for updates."
-    </div>
-  )
-}
+// const NoAuction: React.FC = () => {
+//   return (
+//     <div className='text-4xl font-bold text-center text-[#002766]'>
+//       "Currently, no auctions are available. Kindly revisit later for updates."
+//     </div>
+//   )
+// }
 
 export default function Home() {
 
@@ -24,36 +18,36 @@ export default function Home() {
     background: '#40A9FF', //primary-5
   };
 
-  const [loading, setLoading] = useState<boolean>(true)
-  const [auctions, setAuctions] = useState<IAuction[]>([]);
-  const [totalAuctions, setTotalAuctions] = useState<number>(0);
-  const [page, setPage] = useState<number>(1);
-  const [pageSize] = useState<number>(3);
-  const [selectedTab, setSelectedTab] = useState<string>('In Progress');
+  // const [loading, setLoading] = useState<boolean>(true)
+  // const [auctions, setAuctions] = useState<IAuction[]>([]);
+  // const [totalAuctions, setTotalAuctions] = useState<number>(0);
+  // const [page, setPage] = useState<number>(1);
+  // const [pageSize] = useState<number>(3);
+  // const [selectedTab, setSelectedTab] = useState<string>('In Progress');
 
-  const fetchData = async (page = 1, filter = {}) => {
-    setLoading(true)
-    try {
-      const response = await axios.get('/auctions', {
-        params: {
-          page: page,
-          pageSize: pageSize,
-          filter: JSON.stringify(filter),
-        },
-      });
-      console.log(response.data)
-      setAuctions(response.data.auctions);
-      setTotalAuctions(response.data.total);
-      setLoading(false)
-    } catch (error) {
-      console.error('Error fetching auction data:', error);
-      setLoading(false)
-    }
-  };
+  // const fetchData = async (page = 1, filter = {}) => {
+  //   setLoading(true)
+  //   try {
+  //     const response = await axios.get('/auctions', {
+  //       params: {
+  //         page: page,
+  //         pageSize: pageSize,
+  //         filter: JSON.stringify(filter),
+  //       },
+  //     });
+  //     console.log(response.data)
+  //     setAuctions(response.data.auctions);
+  //     setTotalAuctions(response.data.total);
+  //     setLoading(false)
+  //   } catch (error) {
+  //     console.error('Error fetching auction data:', error);
+  //     setLoading(false)
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchData(page, { status: selectedTab });
-  }, [selectedTab]);
+  // useEffect(() => {
+  //   fetchData(page, { status: selectedTab });
+  // }, [selectedTab]);
 
   return (
     <div>
@@ -83,16 +77,16 @@ export default function Home() {
           </Carousel>
         </div>
         <div>
-          <div className='space-y-2 py-5'>
-            <div className='text-4xl font-medium text-center text-[#002766]'>
-              Auctions
+          <div className='space-y-2 py-8'>
+            <div id='howitworks' className='text-4xl font-medium text-center text-[#002766]'>
+              How it works
             </div>
             <div className='text-center'>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam posuere gravida sapien at sollicitudin.
             </div>
           </div>
-          <div className='flex flex-col justify-center items-center w-full'>
-            <div className='m-4'>
+          <div className='flex flex-col justify-center items-center w-full h-[600px]'>
+            {/* <div className='m-4'>
               <Tabs
                 defaultActiveKey="In Progress"
                 tabPosition="top"
@@ -126,7 +120,6 @@ export default function Home() {
                 ))
               ) : <NoAuction />}
             </div>
-
             <div className='m-4'>
               <Pagination
                 current={page}
@@ -137,7 +130,7 @@ export default function Home() {
                   fetchData(page, { status: selectedTab });
                 }}
               />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

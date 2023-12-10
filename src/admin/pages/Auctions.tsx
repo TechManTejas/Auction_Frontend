@@ -87,8 +87,10 @@ export default function Auctions() {
                 const updatedCoupons = prevAuctions.map((auction) =>
                     auction._id === editedAuction._id ? editedAuction : auction
                 );
+                setIsModalOpen(false)
                 return updatedCoupons;
             } else {
+                setIsModalOpen(false)
                 // Add the new coupon to the list
                 return [...prevAuctions, editedAuction];
             }
@@ -217,6 +219,9 @@ export default function Auctions() {
                                         title={auction.title}
                                         description={auction.description}
                                         openingBidAmount={auction.opening_bid_amount}
+                                        status={auction.status}
+                                        winnerBidAmount={auction.winner_bid_amount.toString()}
+                                        winner={auction?.winner ?? "None"}
                                         modifyable={false}
                                     />
                                 ))

@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import Autentication from "./Autentication";
 import { Context } from "../context/context.provider";
-import { ClockCircleOutlined, DownOutlined, UserOutlined } from "@ant-design/icons";
+import { ClockCircleOutlined, DownOutlined, QuestionCircleOutlined, UserOutlined } from "@ant-design/icons";
 
 const UserNavbar: React.FC = () => {
+
+    const currentPath = location.pathname.split('/').pop() || '';
 
     const auctionItems: MenuProps['items'] = [
         {
@@ -79,26 +81,32 @@ const UserNavbar: React.FC = () => {
                 <a className='font-bold' href="/home">
                     AUCTION
                 </a>
-                <div>
-                    <Space>
+                {currentPath === 'home' &&
+                    <Space className="space-x-6">
+                        <a href="#howitworks" className="text-blue-500">
+                            <Space>
+                                How it works
+                                <QuestionCircleOutlined />
+                            </Space>
+                        </a>
                         <Dropdown menu={auctionMenu}>
-                            <Button>
+                            <a className="text-blue-500" onClick={(e) => e.preventDefault()}>
                                 <Space>
                                     Auctions
                                     <DownOutlined />
                                 </Space>
-                            </Button>
+                            </a>
                         </Dropdown>
                         <Dropdown menu={tenderMenu}>
-                            <Button>
+                            <a className="text-blue-500" onClick={(e) => e.preventDefault()}>
                                 <Space>
                                     Tenders
                                     <DownOutlined />
                                 </Space>
-                            </Button>
+                            </a>
                         </Dropdown>
                     </Space>
-                </div>
+               }
                 <div className='flex items-center space-x-3'>
                     {
                         userAuthenticated ? <div className='flex items-center space-x-2'>

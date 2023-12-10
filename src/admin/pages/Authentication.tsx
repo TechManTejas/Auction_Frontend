@@ -19,6 +19,7 @@ export default function Authentication() {
             const response = await axios.post('/admins/signin', { username, password });
             console.log(response.data);
             localStorage.setItem('auction-admin-token', response.data.user._id);
+            localStorage.setItem('auction-admin-role', response.data.user.role);
             message.success('Sign in successful');
             navigate('/admin/auctions')
             setAdminAuthenticated(true)

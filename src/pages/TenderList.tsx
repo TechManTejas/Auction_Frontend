@@ -42,14 +42,14 @@ const TenderList: React.FC = () => {
         setIsModalOpen(false);
     };
 
-    const fetchData = async (page = 1, filter = {}) => {
+    const fetchData = async (page = 1) => {
         setLoading(true)
         try {
             const response = await axios.get('/tenders', {
                 params: {
                     page: page,
                     pageSize: pageSize,
-                    filter: JSON.stringify(filter),
+                    filter: JSON.stringify({status: "In Progress"}),
                     search: searchQuery,
                 },
             });
@@ -70,7 +70,7 @@ const TenderList: React.FC = () => {
     return (
         <div>
             <Modal width={1000} closable={false} open={isModalOpen} footer={null} onCancel={closeQuoteModal}>
-                {selectedTender && <TenderForm tender={selectedTender} />}
+                {selectedTender && <TenderForm tender={selectedTender} closeQuoteModal={closeQuoteModal}/>}
             </Modal>
             <div>
                 <div className='space-y-2 py-5'>
@@ -99,17 +99,17 @@ const TenderList: React.FC = () => {
                         ) : tenders.length > 0 ? (
                             // Show auctions if available
                             <div className='flex flex-wrap justify-center gap-12 px-6 text-sm'>
-                                {tenders.map((auction) => (
+                                {tenders.map((tender) => (
                                     <TenderCard
-                                        key={auction._id}
-                                        id={auction._id}
-                                        title={auction.title}
-                                        description={auction.description}
-                                        estCost={auction.estCost}
-                                        timeToComplete={auction.timeToComplete}
-                                        bidEndsOn={auction.bidEndsOn}
-                                        city={auction.city}
-                                        onQuoteSubmit={() => openQuoteModal(auction)}
+                                        key={tender._id}
+                                        id={tender._id}
+                                        title={tender.title}
+                                        description={tender.description}
+                                        estCost={tender.estCost}
+                                        timeToComplete={tender.timeToComplete}
+                                        bidEndsOn={tender.bidEndsOn}
+                                        city={tender.city}
+                                        onQuoteSubmit={() => openQuoteModal(tender)}
                                     />
                                 ))}
                             </div>
@@ -123,7 +123,7 @@ const TenderList: React.FC = () => {
                             total={totalTenders}
                             onChange={(page) => {
                                 setPage(page);
-                                fetchData(page, { status: selectedTab });
+                                fetchData(page);
                             }}
                         />
                     </div>

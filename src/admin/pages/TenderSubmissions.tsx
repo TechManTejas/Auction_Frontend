@@ -73,17 +73,7 @@ export default function TenderSubmissions() {
             ),
         },
         {
-            title: 'IT Return/Bank Statement',
-            dataIndex: 'itReturnOrBankStatement',
-            key: 'itReturnOrBankStatement',
-            render: (text) => (
-                <Button type="default" icon={<FileTextOutlined />} onClick={() => handleFileDownload(text)}>
-                    View File
-                </Button>
-            ),
-        },
-        {
-            title: 'Actions',
+            title: 'Details',
             key: 'actions',
             fixed: 'right',
             render: (_text, record) => (
@@ -110,7 +100,7 @@ export default function TenderSubmissions() {
             axios.get(`/tenderform`, {
                 params: {
                     page: page,
-                    pageSize: 30,
+                    pageSize: 20,
                     filter: JSON.stringify({ tenderId: tenderIdToFetch }),
                     search: searchQuery,
                 },

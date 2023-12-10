@@ -67,17 +67,19 @@ const AuctionList: React.FC = () => {
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam posuere gravida sapien at sollicitudin.
                     </div>
                 </div>
-                <div className='flex flex-col justify-center items-center w-full'>
-                    <div className='m-4'>
+                <div className='flex flex-col justify-center items-center' >
+                    <div className='m-4 bg-blue-200 w-full flex justify-center p-4' >
                         <Tabs
+                            tabBarStyle={{ marginBottom: 0 }}
+                            tabBarGutter={window.innerWidth/3}
+                            indicatorSize={(origin) => origin + window.innerWidth/3}
                             defaultActiveKey={selectedTab}
-                            tabPosition="top"
                             onChange={(key) => {
                                 setSelectedTab(key)
                             }}
                         >
-                            <TabPane tab={<span><PlayCircleOutlined /> Active</span>} key="In Progress" />
-                            <TabPane tab={<span><ClockCircleOutlined /> Upcoming</span>} key="Not Started" />
+                            <TabPane tab={<span className='text-3xl '><PlayCircleOutlined /> Active</span>} key="In Progress" />
+                            <TabPane tab={<span className='text-3xl'><ClockCircleOutlined /> Upcoming</span>} key="Not Started" />
                         </Tabs >
                     </div>
                     <div className='mb-4 w-full flex justify-center'>

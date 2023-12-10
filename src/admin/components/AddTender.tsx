@@ -104,11 +104,25 @@ const AddTender: React.FC<TenderFormProps> = ({ editedTender, onTenderEdited }) 
         },
     });
 
-    // Custom function to convert timeToComplete values into a string
     const convertTimeToCompleteToString = (timeToComplete: { years: number; months: number; weeks: number }) => {
         const { years, months, weeks } = timeToComplete;
-        return `${years} years ${months} months ${weeks} weeks`;
+        const timeStringParts = [];
+
+        if (years > 0) {
+            timeStringParts.push(`${years} ${years === 1 ? 'year' : 'years'}`);
+        }
+
+        if (months > 0) {
+            timeStringParts.push(`${months} ${months === 1 ? 'month' : 'months'}`);
+        }
+
+        if (weeks > 0) {
+            timeStringParts.push(`${weeks} ${weeks === 1 ? 'week' : 'weeks'}`);
+        }
+
+        return timeStringParts.join(' ');
     };
+
 
     return (
         <div className='flex justify-center items-center w-full'>
@@ -139,11 +153,20 @@ const AddTender: React.FC<TenderFormProps> = ({ editedTender, onTenderEdited }) 
                     <Input.TextArea
                         placeholder="Enter description"
                         onChange={(e) => {
-                            formik.setFieldValue('description', e.target.value)
+                            const inputValue = e.target.value;
+                            if (inputValue.length <= 1000) {
+                                formik.setFieldValue('description', inputValue);
+                            }
                         }}
                         value={formik.values.description}
+                        style={{ height: '120px' }}
+                        maxLength={1000}
                     />
+                    <div style={{ marginTop: '8px', color: '#999', fontSize: '12px' }}>
+                        {formik.values.description.length}/1000 characters
+                    </div>
                 </Form.Item>
+
 
                 <Form.Item
                     label="Estimated Cost"

@@ -11,12 +11,21 @@ interface AuctionCardProps {
 }
 
 const AuctionCard: React.FC<AuctionCardProps> = ({ live = false, startAt, title, description, openingBidAmount, image = Placeholder }) => {
+
+    let imagePlace; 
+
+    if (!image.includes("/uploads/")) {
+        imagePlace = image
+    }else{
+        imagePlace = import.meta.env.VITE_BASE_URL + image
+    }
+
     return (
         <div>
-            <div className={`absolute w-[300px] h-[460px] ${live ? 'border-[#52C41A] border-[3px] animate-pulse' : ''}   rounded-xl`} />
+            <div className={`absolute w-[240px] h-[400px] ${live ? 'border-[#52C41A] border-[3px] animate-pulse' : ''}   rounded-xl`} />
             <div
                 style={{ boxShadow: 'rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px' }}
-                className={`w-[300px] h-[460px] ${live ? ' border-[3px]' : ''}   rounded-xl`}
+                className={`w-[240px] h-[400px] ${live ? ' border-[3px]' : ''}   rounded-xl`}
             >
                 {live && (
                     <div className="w-full flex justify-center items-center -mt-6">
@@ -25,11 +34,11 @@ const AuctionCard: React.FC<AuctionCardProps> = ({ live = false, startAt, title,
                         </div>
                     </div>
                 )}
-                <div className="w-full flex justify-center items-center p-2 text-[#002766] daybreakblue-10">
+                <div className="w-full flex text-sm justify-center items-center p-2 text-[#002766] daybreakblue-10">
                     {new Date(startAt).toLocaleString('en-US', {
                         weekday: 'long',
                         year: 'numeric',
-                        month: 'long',
+                        month: '2-digit',
                         day: 'numeric',
                         hour: '2-digit',
                         minute: '2-digit',
@@ -37,11 +46,11 @@ const AuctionCard: React.FC<AuctionCardProps> = ({ live = false, startAt, title,
                     })}
                 </div>
                 <div>
-                    <img src={image || Placeholder} className="object-cover w-full h-44" alt="Auction Item" />
+                    <img src={imagePlace || Placeholder} className="object-cover w-full h-44" alt="Auction Item" />
                 </div>
-                <div className="p-6 space-y-3.5">
+                <div className="p-6 space-y-1">
                     <div className="font-semibold overflow-hidden overflow-ellipsis whitespace-normal line-clamp-1">{title}</div>
-                    <div className="text-sm h-20 overflow-hidden overflow-ellipsis whitespace-normal line-clamp-4">{description}</div>
+                    <div className="text-sm h-14 overflow-hidden overflow-ellipsis whitespace-normal line-clamp-4">{description}</div>
                     <div className="text-[#096DD9] primary-7">Opening Bid: {openingBidAmount}</div>
                     {/* <div className="w-full flex justify-center items-center">
                         <Button className="bg-[#1890FF] primary-6 text-white px-5 rounded-sm">Register</Button>

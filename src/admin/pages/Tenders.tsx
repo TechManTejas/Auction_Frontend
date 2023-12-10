@@ -74,9 +74,9 @@ export default function Tenders() {
         fetchData();
     }, []);
 
-    const handleModifiedAuctionList = (editedTender: ITender) => {
+    const handleModifiedTenderList = (editedTender: ITender) => {
 
-        console.log("EDITED AUCTION", editedTender)
+        console.log("EDITED TENDER", editedTender)
 
         setTenders((prevTenders) => {
             // Check if the edited coupon already exists in the list
@@ -87,8 +87,10 @@ export default function Tenders() {
                 const updatedCoupons = prevTenders.map((tenders) =>
                     tenders._id === editedTender._id ? editedTender : tenders
                 );
+                setIsModalOpen(false)
                 return updatedCoupons;
             } else {
+                setIsModalOpen(false)
                 // Add the new coupon to the list
                 return [...prevTenders, editedTender];
             }
@@ -134,9 +136,9 @@ export default function Tenders() {
     }
 
     return (
-        <div className='shadow-2xl'>
+        <>
             <Modal width={1000} closable={false} open={isModalOpen} footer={null} onCancel={() => { setIsModalOpen(false) }}>
-                <AddTender onTenderEdited={handleModifiedAuctionList} editedTender={editedTenderDetails} />
+                <AddTender onTenderEdited={handleModifiedTenderList} editedTender={editedTenderDetails} />
             </Modal>
             <Tabs
                 className='flex flex-1'
@@ -198,6 +200,6 @@ export default function Tenders() {
                     </div>
                 </TabPane>
             </Tabs>
-        </div>
+        </>
     )
 }

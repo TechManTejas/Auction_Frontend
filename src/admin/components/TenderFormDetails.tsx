@@ -45,12 +45,6 @@ const TenderFormDetails: React.FC<ITenderFormDetails> = ({ selectedSubmission })
                     </Button>
                 </Form.Item>
 
-                <Form.Item label="IT Return or Bank Statement">
-                    <Button type="default" onClick={() => handleFileDownload(selectedSubmission.itReturnOrBankStatement)}>
-                        Download IT Return/Bank Statement
-                    </Button>
-                </Form.Item>
-
                 <Form.Item label="Project Details 1">
                     <Text>{selectedSubmission.projectDetails1}</Text>
                 </Form.Item>

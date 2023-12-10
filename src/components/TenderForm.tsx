@@ -7,10 +7,11 @@ import axios from "../api/axios"
 const { Step } = Steps;
 
 interface TenderFormProps {
-    tender: any; // Adjust the type as needed
+    tender: any;
+    closeQuoteModal: any
 }
 
-const TenderForm: React.FC<TenderFormProps> = ({ tender }) => {
+const TenderForm: React.FC<TenderFormProps> = ({ tender, closeQuoteModal }) => {
 
     const [currentStep, setCurrentStep] = useState(0);
     const [form] = Form.useForm();
@@ -24,6 +25,9 @@ const TenderForm: React.FC<TenderFormProps> = ({ tender }) => {
     };
 
     const onFinish = async (values: any) => {
+
+        console.log(values)
+
         try {
             const {
                 companyName,
@@ -32,13 +36,10 @@ const TenderForm: React.FC<TenderFormProps> = ({ tender }) => {
                 panNumber,
                 gstNumber,
                 incomeProof,
-                itReturnOrBankStatement,
                 projectDetails1,
                 projectDetails2,
                 projectDetails3,
             } = values;
-
-            console.log(values)
 
             // Convert experience to the desired format (e.g., "5 years")
             const formattedExperience = `${experience} years`;
@@ -51,7 +52,6 @@ const TenderForm: React.FC<TenderFormProps> = ({ tender }) => {
             formData.append('panNumber', panNumber);
             formData.append('gstNumber', gstNumber);
             formData.append('incomeProof', incomeProof[0]?.originFileObj); // assuming only one file
-            formData.append('itReturnOrBankStatement', itReturnOrBankStatement[0]?.originFileObj); // assuming only one file
             formData.append('projectDetails1', projectDetails1);
             formData.append('projectDetails2', projectDetails2);
             formData.append('projectDetails3', projectDetails3);
@@ -61,7 +61,9 @@ const TenderForm: React.FC<TenderFormProps> = ({ tender }) => {
 
             if (response.status === 201) {
                 const data = response.data;
-                message.success('Form submitted successfully:', data);
+                message.success('Tender submitted successfully', data);
+
+                closeQuoteModal()
                 // Add any additional logic or redirect if needed
             } else {
                 console.error('Form submission failed:', response.statusText);
@@ -104,7 +106,12 @@ const TenderForm: React.FC<TenderFormProps> = ({ tender }) => {
                         wrapperCol={{ span: 16 }}
                         rules={[{ required: true, message: 'Please input your experience!' }]}
                     >
-                        <Input type="number" />
+                        <Input
+                            type='tel'
+                            placeholder="Enter experience in years"
+                            min={0}  // Set minimum value to 0
+                            style={{ width: '100%' }}
+                        />
                     </Form.Item>
 
                     <Form.Item
@@ -112,9 +119,25 @@ const TenderForm: React.FC<TenderFormProps> = ({ tender }) => {
                         name="quoteAmount"
                         labelCol={{ span: 5 }}
                         wrapperCol={{ span: 16 }}
-                        rules={[{ required: true, message: 'Please input the quote amount!' }]}
+                        rules={[
+                            { required: true, message: 'Please input the quote amount!' },
+                            () => ({
+                                validator(_, value) {
+                                    const estCost = tender.estCost
+                                    if (value >= 0 && value <= estCost) {
+                                        return Promise.resolve();
+                                    }
+                                    return Promise.reject(new Error('Quote amount must be greater than or equal to 0 and less than or equal to Estimated Cost.'));
+                                },
+                            }),
+                        ]}
                     >
-                        <Input type="number" />
+                        <Input
+                            type='tel'
+                            placeholder="Enter quote amount"
+                            min={0}  // Set minimum value to 0
+                            style={{ width: '100%' }}
+                        />
                     </Form.Item>
 
                     <Form.Item
@@ -147,21 +170,7 @@ const TenderForm: React.FC<TenderFormProps> = ({ tender }) => {
                         rules={[{ required: true, message: 'Please upload your income proof!' }]}
                     >
                         <Upload name="incomeProof" beforeUpload={() => false}>
-                            <Button icon={<UploadOutlined />}>Click to upload</Button>
-                        </Upload>
-                    </Form.Item>
-
-                    <Form.Item
-                        label="IT Return or Bank Statement"
-                        name="itReturnOrBankStatement"
-                        valuePropName="fileList"
-                        getValueFromEvent={normFile}
-                        labelCol={{ span: 5 }}
-                        wrapperCol={{ span: 16 }}
-                        rules={[{ required: true, message: 'Please upload your document!' }]}
-                    >
-                        <Upload name="itReturnOrBankStatement" beforeUpload={() => false}>
-                            <Button icon={<UploadOutlined />}>Click to upload</Button>
+                            <Button icon={<UploadOutlined />}>Click to upload IT Return of last 1 year or Bank Statement of last 3 months</Button>
                         </Upload>
                     </Form.Item>
 
@@ -179,15 +188,15 @@ const TenderForm: React.FC<TenderFormProps> = ({ tender }) => {
                 <>
                     <Form.Item name="projectDetails1" label="Project Details 1" labelCol={{ span: 5 }}
                         wrapperCol={{ span: 16 }} >
-                        <Input.TextArea style={{ height: '108px' }} />
+                        <Input.TextArea style={{ height: '108px' }} defaultValue={"Cost of project:\nTime to complete\nDetails:"} />
                     </Form.Item>
                     <Form.Item name="projectDetails2" label="Project Details 2" labelCol={{ span: 5 }}
                         wrapperCol={{ span: 16 }}>
-                        <Input.TextArea style={{ height: '108px' }} />
+                        <Input.TextArea style={{ height: '108px' }} defaultValue={"Cost of project:\nTime to complete\nDetails:"} />
                     </Form.Item>
                     <Form.Item name="projectDetails3" label="Project Details 3" labelCol={{ span: 5 }}
                         wrapperCol={{ span: 16 }}>
-                        <Input.TextArea style={{ height: '108px' }} />
+                        <Input.TextArea style={{ height: '108px' }} defaultValue={"Cost of project:\nTime to complete\nDetails:"} />
                     </Form.Item>
 
                     <Form.Item wrapperCol={{ offset: 5, span: 16 }} >

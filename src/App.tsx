@@ -13,6 +13,7 @@ import AuctionList from "./pages/AuctionList";
 import TenderList from "./pages/TenderList";
 import Tenders from "./admin/pages/Tenders";
 import TenderSubmissions from "./admin/pages/TenderSubmissions";
+import Staff from "./admin/pages/Staffs";
 
 
 const UserRoutes: React.FC = () => {
@@ -42,6 +43,7 @@ const UserRoutes: React.FC = () => {
 const AdminRoutes: React.FC = () => {
 
   const { adminAuthenticated } = Context();
+  const userRole = localStorage.getItem("auction-admin-role")
 
   return (
     <>
@@ -53,10 +55,29 @@ const AdminRoutes: React.FC = () => {
         <Routes>
           {adminAuthenticated && (
             <>
-              <Route path="/" element={<Navigate to={"auctions"} />} />
-              <Route path="/auctions" element={<Auctions />} />
-              <Route path="/tenders" element={<Tenders />} />
-              <Route path="/tenders-submissions/" element={<TenderSubmissions />} />
+              {userRole === 'SUPERADMIN' && (
+                <>
+                  <Route path="/" element={<Navigate to="auctions" />} />
+                  <Route path="/staffs" element={<Staff />} />
+                  <Route path="/auctions" element={<Auctions />} />
+                  <Route path="/tenders" element={<Tenders />} />
+                  <Route path="/tenders-submissions" element={<TenderSubmissions />} />
+                </>
+              )}
+
+              {userRole === 'AUCTIONADMIN' && (
+                <>
+                  <Route path="/" element={<Navigate to="auctions" />} />
+                  <Route path="/auctions" element={<Auctions />} />
+                </>
+              )}
+
+              {userRole === 'TENDERADMIN' && (
+                <>
+                  <Route path="/" element={<Navigate to="tenders" />} />
+                  <Route path="/tenders" element={<Tenders />} />
+                </>
+              )}
             </>
           )}
           {!adminAuthenticated && (
