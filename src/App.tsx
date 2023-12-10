@@ -76,6 +76,7 @@ const AdminRoutes: React.FC = () => {
                 <>
                   <Route path="/" element={<Navigate to="tenders" />} />
                   <Route path="/tenders" element={<Tenders />} />
+                  <Route path="/tenders-submissions" element={<TenderSubmissions />} />
                 </>
               )}
             </>

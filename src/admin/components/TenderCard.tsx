@@ -61,24 +61,27 @@ const TenderCard: React.FC<TenderCardProps> = ({ id, title, description, estCost
                                     }
                                 })
                             }}>View Submissions</Button>
-                            <Button
-                                icon={<EditOutlined />}
-                                type="primary"
-                                className="bg-[#1890FF] primary-6 text-white px-5 rounded-lg"
-                                onClick={() => {
-                                    if (handleEditCoupon) {
-                                        handleEditCoupon(id)
-                                    }
-                                }} />
-
-                            <Button
-                                className="bg-[#ff1818] primary-6 text-white px-5 rounded-lg"
-                                icon={<DeleteOutlined />}
-                                onClick={() => {
-                                    if (handleDeleteConfirmation) {
-                                        handleDeleteConfirmation(id)
-                                    }
-                                }} />
+                            {handleEditCoupon &&
+                                <Button
+                                    icon={<EditOutlined />}
+                                    type="primary"
+                                    className="bg-[#1890FF] primary-6 text-white px-5 rounded-lg"
+                                    onClick={() => {
+                                        if (handleEditCoupon) {
+                                            handleEditCoupon(id)
+                                        }
+                                    }} />
+                            }
+                            {handleDeleteConfirmation &&
+                                <Button
+                                    className="bg-[#ff1818] primary-6 text-white px-5 rounded-lg"
+                                    icon={<DeleteOutlined />}
+                                    onClick={() => {
+                                        if (handleDeleteConfirmation) {
+                                            handleDeleteConfirmation(id)
+                                        }
+                                    }} />
+                            }
                         </div>
                     }
                 </div>
