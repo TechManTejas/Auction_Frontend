@@ -1,11 +1,7 @@
 import React from 'react';
 import { Layout, Menu } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
-import {
-    BookOutlined, FileOutlined, UserOutlined,
-    // CreditCardOutlined,
-    // UserOutlined,
-} from '@ant-design/icons';
+import { BookOutlined, FileOutlined, UserOutlined } from '@ant-design/icons';
 
 const { Sider } = Layout;
 
@@ -44,12 +40,12 @@ const Sidebar: React.FC = () => {
                     </>
                 )}
                 {role === 'AUCTIONADMIN' && (
-                    <Menu.Item key="Auctions" icon={<BookOutlined />}>
+                    <Menu.Item key="auctions" icon={<BookOutlined />}>
                         Auctions
                     </Menu.Item>
                 )}
                 {role === 'TENDERADMIN' && (
-                    <Menu.Item key="Tenders" icon={<FileOutlined />}>
+                    <Menu.Item key="tenders" icon={<FileOutlined />}>
                         Tenders
                     </Menu.Item>
                 )}

@@ -51,7 +51,7 @@ const TenderCard: React.FC<TenderCardProps> = ({ id, title, description, estCost
                     {
                         true &&
                         <div className="w-full flex justify-between items-center">
-                            <Button type="primary" className="bg-[#ffc918] primary-6 text-white px-5 rounded-lg" onClick={() => {
+                            <Button className="bg-yellow-500 primary-6 text-white px-5 rounded-lg" onClick={() => {
                                 localStorage.setItem("selected-tender-id", id)
                                 localStorage.setItem("selected-tender-title", title)
                                 navigate('/admin/tenders-submissions', {

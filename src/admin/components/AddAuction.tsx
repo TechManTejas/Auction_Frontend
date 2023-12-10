@@ -205,6 +205,9 @@ const AddAuction: React.FC<AuctionFormProps> = ({ editedAuction, onAuctionEdited
                             formik.setFieldValue('description', e.target.value);
                         }}
                         value={formik.values.description}
+                        style={{
+                            height: "120px"
+                        }}
                     />
                 </Form.Item>
 
@@ -215,8 +218,10 @@ const AddAuction: React.FC<AuctionFormProps> = ({ editedAuction, onAuctionEdited
                     <DatePicker
                         showTime
                         onChange={(date, dateString) => {
+                            console.log(date)
                             formik.setFieldValue('start_datetime', dateString);
                         }}
+                        className="custom-date-picker" 
                     />
                 </Form.Item>
 
