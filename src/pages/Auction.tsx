@@ -6,6 +6,7 @@ import { IAuction } from "../types/auction.types";
 import { io } from "socket.io-client";
 import { formatTimeRemaining } from "../utils/TimeFormatter";
 import { useNavigate } from "react-router-dom";
+import { ClockCircleOutlined, UserOutlined, WalletOutlined } from "@ant-design/icons";
 
 interface LiveAuctionDetails {
   // Define the structure of your auction data
@@ -34,9 +35,10 @@ export default function Auction() {
   const fetchData = async () => {
     try {
       const response = await axios.get(`/auctions/${room_id}/`);
+      console.log(response.data.auction)
       setAuction({
-        ...response.data,
-        raise_options: JSON.parse(response.data.raise_options)
+        ...response.data.auction,
+        raise_options: JSON.parse(response.data.auction.raise_options)
       })
     } catch (error) {
       console.error('Error fetching auction data:', error);
@@ -53,13 +55,13 @@ export default function Auction() {
   };
 
   useEffect(() => {
-    
+
     fetchData()
 
     // Emit the 'joinAuction' event when the component mounts to join the auction room
     socket.emit("joinAuction", {
-      auctionId: room_id, 
-      bidder_id: bidder_id, 
+      auctionId: room_id,
+      bidder_id: bidder_id,
       bidder_name: bidder_name
     });
 
@@ -96,12 +98,12 @@ export default function Auction() {
 
 
   return (
-    <div className="bg-[#EDF5FF] p-10 space-y-10">
-      <div className="flex justify-center">
-        <div className="border">
-          <img src={auction?.image || Placeholder} className="w-[500px] h-72 object-contain" />
+    <div className=" space-y-10">
+      <div className="flex justify-center p-4">
+        <div className="border rounded-xl">
+          <img src={`${import.meta.env.VITE_BASE_URL}${auction?.image}` || Placeholder} className="w-[500px] h-72 object-cover rounded-xl" />
         </div>
-        <div className="p-5 space-y-2 w-[600px]">
+        <div className="px-10 space-y-2 w-[600px]">
           <div className='text-4xl font-medium text-[#002766]'>
             {auction?.title}
           </div>
@@ -111,39 +113,78 @@ export default function Auction() {
         </div>
       </div>
 
-      <div className="space-y-6 border-[4px] py-10 border-[#52C41A]">
+      <div className="space-y-6 py-10 rounded-t-[48px] flex flex-col justify-center items-center" style={{
+        boxShadow: "rgba(0, 0, 0, 0.56) 0px 22px 70px 4px"
+      }}>
+        <div className="text-white -mt-10 rounded-b-lg text-xl bg-[#52C41A] success font-semibold px-2 animate-pulse w-24 h-10 items-center flex justify-center">
+          LIVE
+        </div>
         {/* Display winner and winnerBidAmount */}
-        {liveAuctionDetails && (
-          <div className="text-center space-y-2">
-            <div className="text-4xl font-medium text-[#002766]">
-              Current Highest Bidder: {liveAuctionDetails.winnerName || "'No one started yet'"}
+        <div className="flex justify-evenly w-full">
+          {liveAuctionDetails && (
+            <div className="border-2 border-blue-400 flex items-center justify-around rounded-xl px-4 py-2 w-64 h-20">
+              <div className="m-2 text-2xl">
+                <UserOutlined />
+              </div>
+              <div className="">
+                <div className="text-sm font-light">
+                  Current Highest Bidder
+                </div>
+                <div className="font-medium text-2xl">
+                  {liveAuctionDetails.winnerName || "'No one started yet'"}
+                </div>
+              </div>
             </div>
-            <div className="text-4xl font-medium text-[#002766]">
-              Current Bid Amount: ${liveAuctionDetails.winnerBidAmount}
+          )}
+          {liveAuctionDetails && (
+            <div className="border-2 border-blue-400 flex items-center justify-around rounded-xl px-4 py-2 w-64 h-20">
+              <div className="m-2 text-2xl">
+                <WalletOutlined />
+              </div>
+              <div className="">
+                <div className="text-sm font-light">
+                  Current Bid Amount
+                </div>
+                <div className="font-medium text-2xl">
+                  {liveAuctionDetails.winnerBidAmount || "'No one started yet'"}
+                </div>
+              </div>
             </div>
-            <div className="text-white bg-[#52C41A] success font-semibold px-2 rounded-t-sm animate-pulse text-center">
-            LIVE
-          </div>
-          </div>
-        )}
-        <div className="text-center ">
-          <span className="text-4xl font-medium text-[#002766]">Auction ends in:- </span>
-          {timeRemaining !== null ? (
-            <span className="text-4xl font-medium text-red-600">{formatTimeRemaining(timeRemaining)}</span>
-          ) : (
-            <span className="text-4xl font-medium text-red-600">Loading...</span>
+          )}
+          {liveAuctionDetails && (
+            <div className="border-2 border-blue-400 flex items-center justify-around rounded-xl px-4 py-2 w-64 h-20">
+              <div className="m-2 text-2xl">
+                <ClockCircleOutlined />
+              </div>
+              <div className="">
+                <div className="text-sm font-light">
+                  Auction ends in
+                </div>
+                <div className="font-medium text-lg">
+                  {timeRemaining !== null ? (
+                    <span className="text-red-600">{formatTimeRemaining(timeRemaining)}</span>
+                  ) : (
+                    <span className="text-red-600">Loading...</span>
+                  )}
+                </div>
+              </div>
+            </div>
           )}
         </div>
-        <div className="space-y-8">
-          <div className="text-center font-medium text-xl">
-            Raise options
+        <div className="space-y-8 w-full">
+          <div className="font-light text-gray-500 text-xl flex justify-center items-center w-full">
+            <div className="border w-full" />
+            <div className="w-48 text-center">
+              Raise bid
+            </div>
+            <div className="border w-full" />
           </div>
-          <div className="flex justify-center gap-16">
+          <div className="flex justify-center gap-20">
             <Button onClick={() => {
               handlePlaceBid('1')
-            }} type="primary" className="bg-[#1890FF] primary-6 text-white font-medium text-2xl h-10 w-40">
+            }} type="primary" className="bg-[#1890FF] primary-6 text-white font-semibold shadow-2xl text-3xl h-12 w-60">
               {auction?.raise_options && auction.raise_options['1'] !== undefined ? (
-                `+ $${auction.raise_options['1'] as string}`
+                `+ ₹${auction.raise_options['1'] as string}`
               ) : (
                 'Loading...'
               )}
@@ -151,29 +192,29 @@ export default function Auction() {
 
             <Button onClick={() => {
               handlePlaceBid('2')
-            }} type="primary" className="bg-[#1890FF] primary-6 text-white font-medium text-2xl h-10 w-40">
+            }} type="primary" className="bg-[#1890FF] primary-6 text-white font-semibold shadow-2xl text-3xl h-12 w-60">
               {auction?.raise_options && auction.raise_options['1'] !== undefined ? (
-                `+ $${auction.raise_options['2'] as string}`
+                `+ ₹${auction.raise_options['2'] as string}`
               ) : (
                 'Loading...'
               )}
             </Button>
           </div>
-          <div className="flex justify-center gap-16">
+          <div className="flex justify-center gap-20">
             <Button onClick={() => {
               handlePlaceBid('3')
-            }} type="primary" className="bg-[#1890FF] primary-6 text-white font-medium text-2xl h-10 w-40">
+            }} type="primary" className="bg-[#1890FF] primary-6 text-white font-semibold shadow-2xl text-3xl h-12 w-60">
               {auction?.raise_options && auction.raise_options['1'] !== undefined ? (
-                `+ $${auction.raise_options['3'] as string}`
+                `+ ₹${auction.raise_options['3'] as string}`
               ) : (
                 'Loading...'
               )}
             </Button>
             <Button onClick={() => {
               handlePlaceBid('4')
-            }} type="primary" className="bg-[#1890FF] primary-6 text-white font-medium text-2xl h-10 w-40">
+            }} type="primary" className="bg-[#1890FF] primary-6 text-white font-semibold shadow-2xl text-3xl h-12 w-60">
               {auction?.raise_options && auction.raise_options['1'] !== undefined ? (
-                `+ $${auction.raise_options['4'] as string}`
+                `+ ₹${auction.raise_options['4'] as string}`
               ) : (
                 'Loading...'
               )}
@@ -181,10 +222,15 @@ export default function Auction() {
           </div>
         </div>
       </div>
-
-      <div className="text-red-600 text-center">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam posuere gravida sapien at sollicitudin. Quisque non consectetur massa, in congue libero.
-      </div>
     </div>
   )
 }
+
+{/* <div className="">
+            <span className="text-4xl font-medium text-[#002766]">Auction ends in:- </span>
+            {timeRemaining !== null ? (
+              <span className="text-4xl font-medium text-red-600">{formatTimeRemaining(timeRemaining)}</span>
+            ) : (
+              <span className="text-4xl font-medium text-red-600">Loading...</span>
+            )}
+          </div> */}
