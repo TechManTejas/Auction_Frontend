@@ -211,20 +211,6 @@ const AddAuction: React.FC<AuctionFormProps> = ({ editedAuction, onAuctionEdited
                     />
                 </Form.Item>
 
-                <Form.Item
-                    label='Start Date and Time'
-                    rules={[{ required: true, message: 'Please select the start date and time!' }]}
-                >
-                    <DatePicker
-                        showTime
-                        onChange={(date, dateString) => {
-                            console.log(date)
-                            formik.setFieldValue('start_datetime', dateString);
-                        }}
-                        className="custom-date-picker" 
-                    />
-                </Form.Item>
-
                 <Form.Item label='Duration'>
                     <InputNumber
                         style={{ width: '50%' }}
@@ -284,6 +270,20 @@ const AddAuction: React.FC<AuctionFormProps> = ({ editedAuction, onAuctionEdited
                             style={{ width: '50%' }}
                         />
                     </Space.Compact>
+                </Form.Item>
+
+                <Form.Item
+                    label='Start Date and Time'
+                    rules={[{ required: true, message: 'Please select the start date and time!' }]}
+                >
+                    <DatePicker
+                        showTime
+                        onChange={(date, dateString) => {
+                            console.log(date)
+                            formik.setFieldValue('start_datetime', dateString);
+                        }}
+                        className="custom-date-picker" 
+                    />
                 </Form.Item>
 
                 <Form.Item wrapperCol={{ offset: 8, span: 14 }}>
