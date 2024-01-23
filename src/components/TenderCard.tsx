@@ -24,8 +24,8 @@ const TenderCard: React.FC<TenderCardProps> = ({ id, title, description, estCost
                 className={`w-[300px] h-[344px] rounded-xl`}
             >
                 <div className="p-6 space-y-3.5">
-                    <div className="text-xl h-20 font-semibold overflow-hidden overflow-ellipsis line-clamp-3">{title}</div>
-                    {/* <div className="text-sm h-40 overflow-hidden overflow-ellipsis whitespace-normal">{description}</div> */}
+                    <div className="text-xl font-semibold overflow-hidden overflow-ellipsis line-clamp-1">{title}</div>
+                    <div className="text-sm h-10 overflow-hidden overflow-ellipsis line-clamp-2">{description}</div>
                     <div><span className="text-[#096DD9] primary-7">City: </span>{city}</div>
                     <div><span className="text-[#096DD9] primary-7">Esimated Cost: </span>{estCost}</div>
                     <div className="h-10"><span className="text-[#096DD9] primary-7">Time to Complete: </span>{timeToComplete}</div>
