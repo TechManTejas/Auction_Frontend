@@ -96,6 +96,8 @@ const AddAuction: React.FC<AuctionFormProps> = ({ editedAuction, onAuctionEdited
                 // Convert to string
                 const formattedDatetime = startDatetime.toString(); 
 
+                console.log(startDatetime, formattedDatetime)
+
                 formData.append('title', values.title);
                 formData.append('description', values.description);
                 formData.append('start_datetime', formattedDatetime);
