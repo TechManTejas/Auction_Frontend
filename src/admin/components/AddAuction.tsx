@@ -91,8 +91,8 @@ const AddAuction: React.FC<AuctionFormProps> = ({ editedAuction, onAuctionEdited
 
                 const startDatetime = new Date(values.start_datetime);
                 // Subtract 5 hours and 30 minutes
-                startDatetime.setHours(startDatetime.getHours() - 5);
-                startDatetime.setMinutes(startDatetime.getMinutes() - 30);
+                // startDatetime.setHours(startDatetime.getHours() - 5);
+                // startDatetime.setMinutes(startDatetime.getMinutes() - 30);
                 // Convert to string
                 const formattedDatetime = startDatetime.toString(); 
 
