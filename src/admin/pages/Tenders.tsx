@@ -71,7 +71,16 @@ export default function Tenders() {
     };
 
     useEffect(() => {
+        // Initial fetch
         fetchData();
+
+        // Fetch data every 5 seconds
+        const intervalId = setInterval(() => {
+            fetchData();
+        }, 5000);
+
+        // Cleanup interval on component unmount
+        return () => clearInterval(intervalId);
     }, []);
 
     const handleModifiedTenderList = (editedTender: ITender) => {
@@ -193,6 +202,8 @@ export default function Tenders() {
                                         timeToComplete={auction.timeToComplete}
                                         bidEndsOn={auction.bidEndsOn}
                                         city={auction.city}
+                                        handleDeleteConfirmation={handleDeleteConfirmation}
+                                        handleEditCoupon={handleEditCoupon}
                                     />
                                 ))
                         ) : <NoTender />

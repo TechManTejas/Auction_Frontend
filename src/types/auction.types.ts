@@ -1,7 +1,7 @@
 export interface IAuction {
     _id: string;
     winner_id: string | null;
-    winner: string | null;
+    winner_name: string | null;
     winner_bid_amount: number;
     title: string;
     description: string;

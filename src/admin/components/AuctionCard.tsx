@@ -26,7 +26,7 @@ const AuctionCard: React.FC<AuctionCardProps> = ({ id, live = false, image, star
             <div className={`absolute w-[240px] h-[400px] ${live ? 'border-[#52C41A] border-[3px] animate-pulse' : ''}   rounded-xl`} />
             <div
                 style={{ boxShadow: 'rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px' }}
-                className={`w-[240px] h-[400px] ${live ? ' border-[3px]' : ''}   rounded-xl`}
+                className={`w-[240px] ${winner ? 'h-[420px]' : 'h-[400px]'}  ${live ? ' border-[3px]' : ''}   rounded-xl`}
             >
                 {live && (
                     <div className="w-full flex justify-center items-center -mt-6">

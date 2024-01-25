@@ -13,7 +13,7 @@ export default function Results() {
     const fetchAuction = async () => {
       try {
         const response = await axios.get(`/auctions/${room_id}`);
-        const auction = response.data;
+        const auction = response.data.auction;
 
         // Check if winner_id matches the userToken
         if (auction.winner_id === userToken) {
@@ -59,10 +59,12 @@ export default function Results() {
         <div className="h-[600px] flex flex-col justify-center items-center">
           <Result
             status="success"
-            title="Successfully Purchased Cloud Server ECS!"
+            title="Congratulations! You Won the Auction!"
             subTitle="Order number: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait."
             extra={[
-              <Button className="bg-[#1890FF] primary-6 text-white px-5 rounded-sm">
+              <Button className="bg-[#1890FF] primary-6 text-white px-5 rounded-sm" onClick={()=>{
+                window.location.href = '/'
+              }}>
                 Proceed to Payment
               </Button>,
             ]}
@@ -73,10 +75,12 @@ export default function Results() {
         <div>
           <Result
             status="error"
-            title="Submission Failed"
+            title="You did not win the auction!"
             subTitle="Please check and modify the following information before resubmitting."
             extra={[
-              <Button className="bg-[#1890FF] primary-6 text-white px-5 rounded-sm">
+              <Button className="bg-[#1890FF] primary-6 text-white px-5 rounded-sm" onClick={()=>{
+                window.location.href = '/'
+              }}>
                 Go Home
               </Button>,
             ]}

@@ -89,18 +89,9 @@ const AddAuction: React.FC<AuctionFormProps> = ({ editedAuction, onAuctionEdited
                     formData.append('image', imageFile);
                 }
 
-                const startDatetime = new Date(values.start_datetime);
-                // Subtract 5 hours and 30 minutes
-                // startDatetime.setHours(startDatetime.getHours() - 5);
-                // startDatetime.setMinutes(startDatetime.getMinutes() - 30);
-                // Convert to string
-                const formattedDatetime = startDatetime.toString(); 
-
-                console.log(startDatetime, formattedDatetime)
-
                 formData.append('title', values.title);
                 formData.append('description', values.description);
-                formData.append('start_datetime', formattedDatetime);
+                formData.append('start_datetime', values.start_datetime.toString());
                 formData.append('duration', durationMilliseconds.toString());
                 formData.append('durationHours', values.durationHours.toString());
                 formData.append('durationMinutes', values.durationMinutes.toString());

@@ -71,7 +71,16 @@ export default function Auctions() {
     };
 
     useEffect(() => {
+        // Initial fetch
         fetchData();
+
+        // Fetch data every 5 seconds
+        const intervalId = setInterval(() => {
+            fetchData();
+        }, 5000);
+
+        // Cleanup interval on component unmount
+        return () => clearInterval(intervalId);
     }, []);
 
     const handleModifiedAuctionList = (editedAuction: IAuction) => {
@@ -221,8 +230,8 @@ export default function Auctions() {
                                         openingBidAmount={auction.opening_bid_amount}
                                         status={auction.status}
                                         winnerBidAmount={auction.winner_bid_amount.toString()}
-                                        winner={auction?.winner ?? "None"}
-                                        modifyable={false}
+                                        winner={auction?.winner_name ?? "None"}
+                                        modifyable={true}
                                     />
                                 ))
                         ) : <NoAuction />
